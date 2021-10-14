@@ -1,0 +1,50 @@
+.txt-danger {
+  color: #F56C6C;
+}
+.txt-primary {
+  color: #409eff;
+}
+.txt-warning {
+  color: #E6A23C;
+}
+.txt-info {
+  color: #909399;
+}
+.txt-success {
+  color: #67C23A;
+}
+.txt-bold {
+  font-weight: bold;
+}
+.switch-label {
+  color: #409eff;
+  font-weight: bold;
+  padding-left: 2em;
+}
+
+/* 说明弹窗样式 */
+.dialog-explain .explain-title {
+  font-size:1.3em;
+  font-weight:bold;
+  text-align:center;
+}
+.dialog-explain .p-line {
+  margin-top: 10px;
+  line-height: 30px;
+}
+.dialog-explain .line-title {
+  font-size: 1.2em;
+}
+.dialog-explain .line-explain {
+  font-size: 1.1em;
+  padding-left: 2em;
+}
+
+/* 代码块样式 */
+.block-code {
+  display: inline-block;
+  background-color: #F8F8F8;
+  padding: 0 8px;
+  border: 0.8px #ccc solid;
+  border-radius: 5px;
+}
