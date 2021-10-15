@@ -1,43 +1,26 @@
 import Vue from 'vue'
-
-import 'normalize.css/normalize.css' // A modern alternative to CSS resets
+import App from './App.vue'
+import router from './core/router'
+import store from './store'
 
 import ElementUI from 'element-ui'
 
-import '@/styles/index.scss'
+import '@/core/directive'
+import '@/core/mixin/zlMixin'
 
-import VueClipboard from 'vue-clipboard2'
-import App from './App.vue'
-import router from './router'
-import store from './store'
-import Xcrud from 'xcrud'
+import '@/core/components/globalComp'
 
-import '@/permission'
-import '@/icons'
-import '@/utils'
-import filters from '@/filters'
+import '@/core/utils'
 
-// 修改el-table属性，默认高亮显示当前选中行
-ElementUI.Table.props.highlightCurrentRow.default = true
+import '@/core/filters'
 
-window.Vue = Vue
-// --- end 编辑器配置
-
-Vue.use(ElementUI).use(VueClipboard)
-Vue.use(Xcrud)
-
-Object.keys(filters).forEach(key => Vue.filter(key, filters[key]))
-
-Vue.config.productionTip = false
-
-/**
- * 全局权限检查
- * 配合v-if使用  v-if="$auth('weixin:mp:tag:get')"
- */
-Vue.prototype.$auth = code => {
-  const authorities = store.getters['user/authorities'] || []
-  return authorities.indexOf(code) >= 0
+if (process.env.VUE_APP_PERMISSION_STATUS === 'independent' && process.env.NODE_ENV === 'development') {
+  require('@/core/permission/independent')
+} else {
+  require('@/core/permission/unite')
 }
+
+Vue.use(ElementUI)
 
 new Vue({
   router,

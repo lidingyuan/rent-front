@@ -1,0 +1,264 @@
+import XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
+
+import * as DefaultStyleConfig from './DefaultStyleConfig'
+
+function s2ab (s) {
+  var buf = new ArrayBuffer(s.length)
+  var view = new Uint8Array(buf)
+  for (var i = 0; i !== s.length; ++i) view[i] = s.charCodeAt(i) & 0xFF
+  return buf
+}
+
+/**
+ * 设置工作表样式，包括 标题样式、描述样式、表头样式、数据样式
+ * @param {Object} ws 工作表
+ * @param {*} isTitle 是否包含Title
+ * @param {*} isDesc 是否包含Description
+ * @param {*} headerRowCnt 表头行数
+ */
+function defaultStyleFunc (ws, {
+  isTitle = true,
+  isDesc = true,
+  headerRowCnt = 1
+} = {}) {
+  // 1 单元格样式
+  let rowBegin = 0
+  // 标题单元格样式
+  if (isTitle) {
+    let titleStyle = DefaultStyleConfig.titleStyle
+    ws['A1'].s = titleStyle
+    rowBegin++
+  }
+  // 描述单元格样式
+  if (isDesc) {
+    let descStyle = DefaultStyleConfig.descStyle
+    for (let C in ws['!cols']) {
+      let address = XLSX.utils.encode_cell({ c: C, r: rowBegin })
+      ws[address].s = descStyle
+    }
+    rowBegin++
+  }
+  // 表头单元格样式
+  if (headerRowCnt > 0) {
+    let headerStyle = DefaultStyleConfig.headerStyle
+    while (rowBegin < headerRowCnt) {
+      for (let C in ws['!cols']) {
+        let address = XLSX.utils.encode_cell({ c: C, r: rowBegin })
+        ws[address].s = headerStyle
+      }
+      rowBegin++
+    }
+  }
+  // 数据样式
+  let cellStyle = DefaultStyleConfig.cellStyle
+  while (rowBegin < ws['!rows'].length) {
+    for (let C in ws['!cols']) {
+      let address = XLSX.utils.encode_cell({ c: C, r: rowBegin })
+      ws[address].s = cellStyle
+    }
+  }
+
+  // 2 列样式（列宽）
+  // 3 行样式（行高）
+}
+
+/**
+ * 合并单元格
+ * @param {Object} ws worksheet
+ */
+/**
+ * 合并单元格，包括 标题合并、描述合并、表头横向合并、数据纵向合并
+ * @param {Object} ws 工作表
+ * @param {*} isTitle 是否包含Title
+ * @param {*} isDesc 是否包含Description
+ * @param {*} header 表头数组
+ */
+function defaultMergeFunc (ws, {
+  isTitle = true,
+  isDesc = true,
+  header = [],
+  mergeData = true,
+  mergeColCnt = 0,
+  data = []
+} = {}) {
+  let rowCnt = ws['!rows'].length
+  let colCnt = ws['!cols'].length
+  let rowBegin = 0
+
+  if (!ws['!merges']) ws['!merges'] = []
+
+  // 1. 标题
+  if (isTitle) {
+    let merge = {
+      s: { c: 0, r: 0 },
+      e: { c: colCnt - 1, r: 0 }
+    }
+    ws['!merges'].push(merge)
+    rowBegin++
+  }
+  // 2. 描述
+  if (isDesc) {
+    let merge = {
+      s: { c: 0, r: rowBegin },
+      e: { c: colCnt - 1, r: rowBegin }
+    }
+    ws['!merges'].push(merge)
+    rowBegin++
+  }
+  // 3. 表头
+  let headerRowCnt = header.length
+  if (headerRowCnt > 0) {
+    let control = []
+    for (let i = 0; i < headerRowCnt; i++) {
+      for (let j = 0; j < colCnt; j++) {
+        if (!control[j]) {
+          control[j] = []
+        }
+        control[j][i] = 0
+      }
+    }
+    for (let i = 0; i < headerRowCnt; i++) {
+      for (let j = 0; j < colCnt; j++) {
+        if (control[j][i] === 1) {
+          continue
+        }
+        let colSpan = 0
+        let rowSpan = 0
+        for (let k = j + 1; k < colCnt; k++) {
+          if (header[i][j] === header[i][k]) {
+            // 如果是第0行，或者上一行合并，则本行才能合并
+            if (i === 0 || header[i - 1][j] === header[i - 1][k]) {
+              colSpan += 1
+            } else {
+              break
+            }
+          }
+        }
+        if (colSpan > 0) {
+          // 处理横向合并
+          for (let t = 1; t <= colSpan; t++) {
+            control[j + t - 1][i] = 1
+          }
+          let merge = ({
+            s: { c: j, r: rowBegin + i },
+            e: { c: j + colSpan, r: rowBegin + i }
+          })
+          ws['!merges'].push(merge)
+        } else {
+          // 如果横向不合并，才计算是否纵向合并
+          for (let k = i + 1; k < headerRowCnt; k++) {
+            if (header[i][j] === header[k][j]) {
+              control[j][k] = 1
+              rowSpan += 1
+            }
+          }
+          // 处理纵向合并
+          if (rowSpan > 0) {
+            control[j][i] = 1
+            let merge = ({
+              s: { c: j, r: rowBegin + i },
+              e: { c: j, r: rowBegin + i + rowSpan }
+            })
+            ws['!merges'].push(merge)
+          }
+        }
+      }
+    }
+    rowBegin += headerRowCnt
+  }
+  // 4. 数据，固定部分
+  let dataRowCnt = data.length
+  if (mergeData && dataRowCnt > 0) {
+
+  }
+  // 4.1 处理合并后的单元格边框
+  // TODO
+}
+
+/**
+ * 通过json渲染导出表格
+ * @param title 标题
+ * @param header 多级表头
+ * @param data 表格数据
+ * @param filename 表格名
+ * @param bookType 文件类型
+ * @param autoWidth 宽度是否自适应
+ * @param mergeFun 合并单元格函数
+ * @param styleFun 样式函数
+ * @param fixColCnt 固定列个数
+ */
+export const exportJsonToExcel = ({
+  title = [],
+  desc = [],
+  header = [],
+  data = [],
+  filename = '',
+  bookType = 'xlsx',
+  autoWidth = false,
+  mergeFun = defaultMergeFunc,
+  styleFun = defaultStyleFunc
+} = {}) => {
+  // 文件名
+  filename = filename || 'excel-list'
+
+  // 表数据
+  if (!Array.isArray(data)) {
+    // eslint-disable-next-line no-console
+    console.error('表数据不是数组类型，请检查')
+    return
+  }
+
+  // 1. 处理数据
+  let isTitle = false
+  let isDesc = false
+  let headerRowCnt = 0
+  data = [...data]
+  // 头部
+  if (Array.isArray(header) && header.length > 0) {
+    headerRowCnt = header.length
+    for (let i = header.length - 1; i > -1; i--) {
+      data.unshift(i)
+    }
+  }
+  // 描述
+  if (Array.isArray(desc) && desc.length > 0) {
+    isDesc = true
+    data.unshift(desc)
+  }
+  // 标题
+  if (Array.isArray(title) && title.length > 0) {
+    isTitle = true
+    data.unshift(title)
+  }
+
+  // 2. 创建工作表对象
+  const ws = XLSX.utils.json_to_sheet(data, { skipHeader: true })
+
+  // 3. 合并单元格
+  try {
+    // TODO 提供函数，表头横向合并，固定列单元格纵向合并
+    mergeFun(ws)
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e)
+  }
+
+  // 4. 工作表样式
+  try {
+    // TODO 提供函数，表头横向合并，固定列单元格纵向合并
+    styleFun(ws, { isTitle, isDesc, headerRowCnt })
+  } catch (e) {
+    // eslint-disable-next-line no-console
+    console.error(e)
+  }
+
+  // 5. 创建工作簿
+  const wb = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(wb, ws, 'Sheet1')
+
+  // 6. 导出
+  const wbout = XLSX.write(wb, { bookType: bookType, bookSST: false, type: 'binary' })
+  const blob = new Blob([s2ab(wbout)], { type: 'application/octet-stream' })
+  saveAs(blob, `${filename}.${bookType}`)
+}

@@ -1,4 +1,5 @@
-import { dynamicRoutes, constantRoutes } from '@/router'
+import { endRoutes, constantRoutes } from '@/core/router'
+import { getDynamicRoutes } from '@/core/router/dynamicRoutes'
 
 /**
  * Use meta.auth to determine if the current user has permission
@@ -39,29 +40,36 @@ const router = {
 
   state: {
     routes: constantRoutes,
-    addRoutes: []
+    addRoutes: [],
+    appList: []
   },
 
   getters: {
     routes: state => state.routes,
-    addRoutes: state => state.addRoutes
+    addRoutes: state => state.addRoutes,
+    appList: state => state.appList
   },
 
   mutations: {
     SET_ROUTES: (state, routes) => {
       state.addRoutes = routes
-      state.routes = constantRoutes.concat(routes)
+      state.routes = constantRoutes.concat(routes).concat(endRoutes)
+      state.appList = state.routes.filter(item => item.isApp).map(route => {
+        return {
+          name: route.name,
+          path: route.path,
+          meta: route.meta,
+          menuList: route.children || [],
+          currentPage: route.redirect,
+          activePageList: []
+        }
+      })
     }
   },
   actions: {
-    GenerateRoutes ({ commit }, authorities) {
+    GenerateRoutes ({ commit }, menus) {
       return new Promise(resolve => {
-        let accessedRoutes
-        if (authorities.includes('admin')) {
-          accessedRoutes = dynamicRoutes
-        } else {
-          accessedRoutes = filterAsyncRoutes(dynamicRoutes, authorities)
-        }
+        const accessedRoutes = getDynamicRoutes(menus)
         commit('SET_ROUTES', accessedRoutes)
         resolve(accessedRoutes)
       })

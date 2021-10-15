@@ -1,10 +1,9 @@
-import request from '@/utils/request'
+import request from '@/core/utils/request'
 
 export function login (loginInfo) {
   return request({
-    url: `/login`,
-    method: 'post',
-    data: loginInfo
+    url: `/login?username=${loginInfo.username}&password=${loginInfo.password}&captcha=${loginInfo.checkcode}`,
+    method: 'post'
   })
 }
 

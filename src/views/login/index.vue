@@ -1,209 +1,166 @@
 <template>
-  <div class="login-container">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-      <h3 class="title">欢迎您登录</h3>
-      <el-form-item prop="username">
-        <span class="svg-container"><svg-icon icon-class="user" /></span>
-        <el-input v-model="loginForm.username" name="username" type="text" auto-complete="on" placeholder="用户名" />
-      </el-form-item>
-      <el-form-item prop="password">
-        <span class="svg-container"><svg-icon icon-class="password" /></span>
-        <el-input :type="pwdType" v-model="loginForm.password" name="password" auto-complete="on" placeholder="密码" />
-        <span class="show-pwd" @click="showPwd"><svg-icon icon-class="eye" /></span>
-      </el-form-item>
-      <el-form-item>
-        <el-button :loading="loading" type="primary" style="width:100%;" @click.native.prevent="handleLogin">
+  <div class="login">
+    <div class="login-background">
+      <div class="login-title" />
+    </div>
+    <div class="login-side">
+      <div class="login-logo" />
+      <div class="login-form">
+        <input-box
+          v-model="loginForm.username"
+          icon="username"
+          placeholder="请输入您的账号"
+          @keyup.enter.native="handleLogin"
+        />
+        <input-box
+          v-model="loginForm.password"
+          icon="password"
+          type="password"
+          placeholder="请输入您的密码"
+          @keyup.enter.native="handleLogin"
+        />
+        <el-button
+          type="primary"
+          class="login-submit"
+          @click="handleLogin"
+        >
           登录
         </el-button>
-      </el-form-item>
-    </el-form>
+        <div
+          class="login-record"
+          @click="changeRecord"
+        >
+          <div
+            class="login-record-icon"
+            :class="{record:record}"
+          >
+            ✔
+          </div>
+          记住账号密码
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import MD5 from 'crypto-js/md5'
-
-const defautlCheckImageUrl = process.env.VUE_APP_BASE_API + '/captcha/image'
-
+import InputBox from '../Login/InputBox.vue'
 export default {
-  name: 'Login',
+  name: '',
+  components: { InputBox },
   data () {
-    const validateUsername = (rule, value, callback) => {
-      // if (value.length < 5) {
-      //   callback(new Error('用户名不能少于5位'))
-      // } else {
-      //   callback()
-      // }
-      callback()
-    }
-    const validatePass = (rule, value, callback) => {
-      if (value.length < 5) {
-        callback(new Error('密码不能小于5位'))
-      } else {
-        callback()
-      }
-    }
-    const validateCheckCode = (rule, value, callback) => {
-      if (value.length === 0) {
-        callback(new Error('验证码不能为空'))
-      } else {
-        callback()
-      }
-    }
     return {
+      //
+      record: false,
       loginForm: {
         username: '',
-        password: '',
-        checkcode: ''
+        password: ''
       },
-      loginRules: {
-        username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePass }],
-        checkcode: [{ required: true, trigger: 'blur', validator: validateCheckCode }]
-      },
-      loading: false,
-      pwdType: 'password',
-      redirect: undefined,
-      checkImageUrl: defautlCheckImageUrl
+      md5password: ''
     }
   },
   watch: {
-    $route: {
-      handler: function (route) {
-        this.redirect = route.query && route.query.redirect
-      },
-      immediate: true
+    'loginForm.password' () {
+      this.md5password = ''
     }
   },
   created () {
-
+    //
+    const params = JSON.parse(localStorage.getItem('login') || '{}')
+    this.loginForm.username = params.username
+    this.loginForm.password = params.password
+    setTimeout(() => {
+      this.md5password = params.password
+    }, 0)
+    if (params.username) {
+      this.record = true
+    }
   },
   methods: {
-    showPwd () {
-      if (this.pwdType === 'password') {
-        this.pwdType = ''
-      } else {
-        this.pwdType = 'password'
-      }
+    //
+    changeRecord () {
+      this.record = !this.record
     },
     handleLogin () {
-      this.$refs.loginForm.validate(valid => {
-        if (valid) {
-          this.loading = true
-          let md5password = MD5(this.loginForm.password).toString().substring(2, 22)
-          let params = {
-            username: this.loginForm.username,
-            password: md5password,
-            checkcode: this.loginForm.checkcode
-          }
-          this.$store.dispatch('user/Login', params).then(() => {
-            this.loading = false
-            this.$router.push({ path: this.redirect || '/' })
-          }).catch((e) => {
-            this.loading = false
-            this.refreshCheckcode()
-            this.loginForm.checkcode = ''
-          })
-        } else {
-          console.log('error submit!!')
-          return false
+      this.loading = true
+      const md5password = this.md5password || MD5(this.loginForm.password).toString()
+      const params = {
+        username: this.loginForm.username,
+        password: md5password
+      }
+      this.$store.dispatch('user/Login', params).then(() => {
+        if (this.record) {
+          localStorage.setItem('login', JSON.stringify(params))
         }
+        this.loading = false
+        this.$router.push({ path: this.$route.query.redirect || '/' }).catch(() => { })
+      }).catch((e) => {
+        this.loading = false
       })
-    },
-    refreshCheckcode () {
-      this.checkImageUrl = defautlCheckImageUrl + '?_=' + (+new Date())
     }
   }
 }
 </script>
 
-<style rel="stylesheet/scss" lang="scss">
-$bg:#2d3a4b;
-$light_gray:#eee;
-$input_height: 47px;
+<style lang='scss' scoped>
+.login {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+}
+.login-background {
+  width: 0;
+  height: 100%;
+  flex-grow: 1;
+  background: url("~@/assets/img/login-v2/login-background.png") no-repeat 0/100%
+    100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-/* reset element-ui css */
-.login-container {
-  .el-input {
-    display: inline-block;
-    height: $input_height;
-    width: 85%;
-    input {
-      background: transparent;
-      border: 0px;
-      -webkit-appearance: none;
-      border-radius: 0px;
-      padding: 12px 5px 12px 15px;
-      color: $light_gray;
-      height: 47px;
-      &:-webkit-autofill {
-                box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-box-shadow: 0 0 0px 1000px $bg inset !important;
-        -webkit-text-fill-color: #fff !important;
+
+.login-form {
+  width: 372px;
+  padding: 0 36px;
+  margin-top: 125px;
+  box-sizing: border-box;
+  background: #ffffff;
+  color: #666666;
+  font-size: 18px;
+  > div {
+    margin: 24px 0;
+  }
+  .login-submit {
+    width: 300px;
+    height: 40px;
+    margin: 0 auto;
+    font-size: 14px;
+  }
+  .login-record {
+    margin: 8px 0 0 0;
+    display: flex;
+    align-items: center;
+    color: #666666;
+    font-size: 12px;
+    cursor: pointer;
+    .login-record-icon {
+      display: inline-flex;
+      width: 12px;
+      height: 12px;
+      margin: 0 3px;
+      border: 1px solid #dddddd;
+      border-radius: 6px;
+      justify-content: center;
+      align-items: center;
+      color: #ffffff;
+      &.record {
+        background: #3385ff;
+        border: 1px solid #3385ff;
       }
     }
-  }
-  .el-form-item {
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    color: #454545;
-  }
-  .check-image {
-    text-align: right;
-
-    img {
-      height: $input_height;
-      vertical-align: middle;
-      cursor: pointer;
-    }
-  }
-}
-</style>
-
-<style rel="stylesheet/scss" lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
-
-.login-container {
-  position: fixed;
-  height: 100%;
-  width: 100%;
-  background-color: $bg;
-
-  .login-form {
-    position: absolute;
-    left: 50%;
-    margin-top: 120px;
-    padding: 35px 35px 15px 35px;
-    width: 520px;
-    max-width: 100%;
-    transform: translateX(-50%);
-  }
-  .title {
-    font-size: 26px;
-    font-weight: 400;
-    color: $light_gray;
-    margin: 0px auto 40px auto;
-    text-align: center;
-    font-weight: bold;
-  }
-  .svg-container {
-    display: inline-block;
-    padding: 6px 5px 6px 15px;
-    vertical-align: middle;
-    width: 30px;
-    color: $dark_gray;
-  }
-  .show-pwd {
-    position: absolute;
-    right: 10px;
-    top: 7px;
-    font-size: 16px;
-    color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
   }
 }
 </style>

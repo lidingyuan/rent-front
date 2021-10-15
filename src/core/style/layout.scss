@@ -1,0 +1,344 @@
+[layout]{
+  .layout-header{
+    width: 100%;
+    height: 56px;
+    background: $--color-primary;
+    display: flex;
+    align-items: center;
+    .head-logo{
+      flex-shrink: 0;
+      height: 23px;
+      width: 198px;
+      margin-left: 30px;
+      background: url('~@/assets/img/logo.png') no-repeat center/100%;
+    }
+    .head-menu{
+      position: relative;
+      width: 0;
+      height: 100%;
+      flex-grow: 1;
+      flex-shrink: 0;
+      margin: 0 24px;
+      display: flex;
+      align-items: center;
+      .menu-item{
+        flex-shrink: 0;
+        height: 100%;
+        font-size: 16px;
+        color: $--color-white;
+        padding: 0 16px;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        &.active{
+          background: $--color-primary-light-3;
+        }
+        &:hover{
+          background: $--color-primary-light-5;
+          color: $--color-white;
+        }
+      }
+      .divider{
+        flex-shrink: 0;
+        width: 1px;
+        height: 36px;
+        background: linear-gradient(rgba(255,255,255,0),rgba(255,255,255,1),rgba(255,255,255,0));
+      }
+      .more-items-transition{
+        position: absolute;
+        z-index: 1;
+        top: 100%;
+        right: 0;
+        width: 336px;
+        border-radius: 0 0 8px 8px;
+        background: #fff;
+        box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+        .more-items{
+          width: 336px;
+          .menu-item{
+            height: 56px;
+            display: inline-flex;
+            margin: 10px;
+          }
+        }
+      }
+    }
+    .head-search{
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      margin: 18px;
+      background: url('~@/assets/img/head-search.png') no-repeat center/100%;
+      user-select: none;
+      cursor: pointer;
+    }
+    .head-news{
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      margin: 18px;
+      background: url('~@/assets/img/head-news.png') no-repeat center/100%;
+      user-select: none;
+      cursor: pointer;
+    }
+    .head-user{
+      position: relative;
+      display: flex;
+      align-items: center;
+      margin: 12px 20px;
+      user-select: none;
+      .user-img{
+        width: 32px;
+        height: 32px;
+        border-radius: 16px;
+        background-color: #ccc;
+        cursor: pointer;
+      }
+      .user-name{
+        font-size: 16px;
+        color: #FFF;
+        padding: 0 8px;
+        cursor: pointer;
+      }
+      .user-expand{
+        width: 14px;
+        height: 14px;
+        background: url('~@/assets/img/expand.png') no-repeat center/100%;
+        cursor: pointer;
+      }
+      .head-sub-menu-transition{
+        position: absolute;
+        z-index: 99999;
+        top: 100%;
+        right: 0;
+        margin-top: 12px;
+        width: 336px;
+        height: 300px;
+        border-radius: 0 0 8px 8px;
+        background: #fff;
+        box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+      }
+      .head-sub-menu{
+        width: 336px;
+        height: 300px;
+        background: url('~@/assets/img/head/head-sub-menu-background.png') no-repeat top center/100%;
+        .user-info{
+          height: 96px;
+          padding: 0 24px;
+          display: flex;
+          align-items: center;
+          .user-img{
+            width: 48px;
+            height: 48px;
+            border-radius: 24px;
+            background-color: #ccc;
+          }
+          .user-name{
+            font-size: 18px;
+            color: #333;
+          }
+          .user-motto{
+            font-size: 12px;
+            padding: 0 8px;
+            color: #999;
+          }
+        }
+        .user-theme{
+          height: 64px;
+          margin: 0 24px;
+          border-bottom: 1px solid #ccc;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          >div{
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+          }
+        }
+        .user-operation{
+          height: 132px;
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          >div{
+            cursor: pointer;
+            width: 96px;
+            height: 92px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            &:hover{
+              background: #f3f3f3;
+            }
+          }
+          .change-info{
+            width: 30px;
+            height: 30px;
+            background: url('~@/assets/img/head/change-info.png') no-repeat center;
+            padding-bottom: 10px;
+          }
+          .change-password{
+            width: 30px;
+            height: 30px;
+            background: url('~@/assets/img/head/change-password.png') no-repeat center;
+            padding-bottom: 10px;
+          }
+          .logout{
+            width: 30px;
+            height: 30px;
+            background: url('~@/assets/img/head/logout.png') no-repeat center;
+            padding-bottom: 10px;
+          }
+        }
+      }
+    }
+    .app-menu{
+      width:80px;
+      height:100px;
+      font-size: 12px;
+      transform-origin: top;
+    }
+    .app-menu-item{
+      padding: 0 10px;
+      line-height: 2em;
+      user-select: none;
+      cursor: pointer;
+      &:hover{
+        background: #ccc;
+      }
+    }
+  }
+  
+  .layout-navbar{
+    height: 40px;
+    background: #FFFFFF;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    .page{
+      height: 100%;
+      margin: 0 16px;
+    }
+    .navbar-menu{
+      width:80px;
+      height:100px;
+      font-size: 12px;
+    }
+    .menu-item{
+      padding: 0 10px;
+      line-height: 2em;
+      user-select: none;
+      cursor: pointer;
+      &:hover{
+        background: #ccc;
+      }
+    }
+  }
+  
+  $side-dark-color: mix($--color-black, $--color-primary, 80%);
+  $side-color: mix($--color-black, $--color-primary, 60%);
+  $side-font-color: $--color-white;
+  $side-checked-color: mix($--color-black, $--color-primary, 50%);
+  $side-checked-background-color: mix($--color-black, $--color-primary, 40%);
+  $side-checked-icon-color: $--color-primary;
+  .layout-siderbar{
+    height: 100%;
+    width: 52px;
+    background: $side-color;
+    display: flex;
+    flex-direction: column;
+    &.active{
+      width: 240px;
+    }
+    .item-list{
+      height: 0;
+      flex-grow: 1;
+      overflow-x: hidden;
+      .layout-item{
+        box-sizing: border-box;
+        width: 100%;
+        overflow: hidden;
+        white-space: nowrap;
+        height: 52px;
+        display: flex;
+        align-items: center;
+        color: $side-font-color;
+        cursor: pointer;
+        border-left: transparent 4px solid;
+        &.active{
+          background: $side-checked-color;
+          border-left: $side-checked-icon-color 4px solid;
+        }
+        .layout-name{
+          width: 0;
+          flex-grow: 1;
+        }
+        .item-expand{
+          transform: rotateZ(-90deg);
+          &.flip{
+            transform: rotateZ(0deg);
+          }
+        }
+        .icon{
+          flex-shrink: 0;
+          width: 1em;
+          height: 1em;
+          margin: 0 1em;
+        }
+      }
+    }
+    .siderbar-switch{
+      cursor: pointer;
+      height: 52px;
+      background: $side-dark-color;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .flip{
+        transform: rotateY(180deg);
+      }
+    }
+  }
+  
+  .layout-item{
+    width: 240px;
+    display: flex;
+    align-items: center;
+    color: $side-font-color;
+    cursor: pointer;
+    border-left: transparent 4px solid;
+    &.active{
+      background: $side-checked-color;
+      border-left: $side-checked-icon-color 4px solid;
+    }
+    .icon{
+      width: 1em;
+      height: 1em;
+      margin: 0 1em;
+    }
+    .layout-name{
+      width: 0;
+      flex-grow: 1;
+    }
+    .layout-child-name{
+      width: 0;
+      height: 100%;
+      min-height: 52px;
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+      background: $side-dark-color;
+      &.active{
+          background: $side-checked-background-color;
+      }
+    }
+    .item-expand{
+      transform: rotateZ(-90deg);
+      &.flip{
+        transform: rotateZ(0deg);
+      }
+    }
+  }
+}

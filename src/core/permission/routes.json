@@ -1,0 +1,52 @@
+[
+  {
+    "name": "例子",
+    "site": "zoomlgd-bop",
+    "idPath": "10000",
+    "url": "/Example",
+    "icon": "BudgetManagement",
+    "status": 1,
+    "appId": "BOP",
+    "id": "10000",
+    "orderTag": 1
+  },
+  {
+    "name": "预合同编制",
+    "site": "zoomlgd-bop",
+    "pid": "10000",
+    "idPath": "10000,10001",
+    "url": "/Example/PrepareOrder",
+    "icon": "BudgetManagement",
+    "status": 1,
+    "appId": "BOP",
+    "id": "10001",
+    "orderTag": 1,
+    "component":"PrepareOrder"
+  },
+  {
+    "name": "备货订单下达",
+    "site": "zoomlgd-bop",
+    "pid": "10000",
+    "idPath": "10000,10002",
+    "url": "/Example/GoodsOrder",
+    "icon": "BudgetManagement",
+    "status": 1,
+    "appId": "BOP",
+    "id": "10002",
+    "orderTag": 1,
+    "component":"GoodsOrder"
+  },
+  {
+    "name": "element UI主、子表交互与实现",
+    "site": "zoomlgd-bop",
+    "pid": "10000",
+    "idPath": "10000,10003",
+    "url": "/Example/TableCascader",
+    "icon": "BudgetManagement",
+    "status": 1,
+    "appId": "BOP",
+    "id": "10003",
+    "orderTag": 1,
+    "component":"TableCascader"
+  }
+]

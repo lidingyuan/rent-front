@@ -1,22 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="" newsale-theme="#3385FF">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title>活动管理平台</title>
-    <link rel="stylesheet" href="./css/public-style.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/element-ui@2.15.1/lib/theme-chalk/index.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/element-ui@2.15.1/lib/index.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/echarts@4.7.0/dist/echarts.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue-clipboard2@0.3.1/dist/vue-clipboard.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "element-icons";
+        src: url('fonts/element-icons.woff') format("woff"), url('./fonts/element-icons.ttf') format("truetype");
+        /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+        font-weight: normal;
+        font-display: "auto";
+        font-style: normal;
+      }
+    </style>
+    <link rel="stylesheet" type="text/css" href="./css/009EAE.css">
+    <link rel="stylesheet" type="text/css" href="./css/3385FF.css">
+    <link rel="stylesheet" type="text/css" href="./css/5641A3.css">
+    <link rel="stylesheet" type="text/css" href="./css/F72C5B.css">
+    <link rel="stylesheet" type="text/css" href="./css/FF702A.css">
+    <title><%= htmlWebpackPlugin.options.title %></title>
   </head>
   <body>
     <noscript>
-      <strong>We're sorry but activity-platform-front doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
     <!-- built files will be auto injected -->

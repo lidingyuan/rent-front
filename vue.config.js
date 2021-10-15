@@ -4,7 +4,7 @@ function resolve (dir) {
   return path.join(__dirname, dir)
 }
 
-const port = 8107
+const port = 8111
 const name = process.env.VUE_APP_TITLE
 
 module.exports = {
@@ -20,11 +20,7 @@ module.exports = {
       }
     },
     externals: {
-      'vue': 'Vue',
-      'element-ui': 'ELEMENT',
-      'echarts': 'echarts',
-      'qrcode': 'QRCode',
-      'vue-clipboard2': 'VueClipboard'
+      // vue: 'Vue'
     }
   },
 
@@ -58,6 +54,13 @@ module.exports = {
   devServer: {
     port: port,
     proxy: {
+      // '/api/webService': {
+      //   target: 'http://192.168.3.97:8808',
+      //   changeOrigin: true,
+      //   pathRewrite: {
+      //     '^/api/webService': ''
+      //   }
+      // },
       [process.env.VUE_APP_BASE_API]: {
         target: 'http://127.0.0.1:3000/service',
         changeOrigin: true,

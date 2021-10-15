@@ -1,6 +1,6 @@
 import { login, logout } from '@/api/system/login'
 import { info } from '@/api/system/user'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken } from '@/core/utils/auth'
 
 const DEFAULT_AVATAR = process.env.BASE_URL + 'avatar.jpeg'
 
@@ -8,6 +8,7 @@ const user = {
   namespaced: true,
 
   state: {
+    id: '',
     token: getToken(),
     name: '',
     avatar: '',
@@ -17,6 +18,7 @@ const user = {
   },
 
   getters: {
+    id: state => state.id,
     token: state => state.token,
     avatar: state => state.avatar,
     name: state => state.name,
@@ -43,6 +45,9 @@ const user = {
     },
     SET_FORCE_CHANGE_PASSWORD: (state, passwordExpireTime) => {
       state.forceChangePassword = passwordExpireTime !== -1 && Date.now() >= passwordExpireTime
+    },
+    SET_ID: (state, id) => {
+      state.id = id
     }
   },
 
@@ -53,7 +58,6 @@ const user = {
       return new Promise((resolve, reject) => {
         login(loginInfo).then(response => {
           const data = response.data
-          console.log(data)
           if (data.token) {
             setToken(data.token)
             commit('SET_TOKEN', data.token)
@@ -82,6 +86,7 @@ const user = {
           }
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar || DEFAULT_AVATAR)
+          commit('SET_ID', data.id)
           commit('SET_FORCE_CHANGE_PASSWORD', Number.parseInt(data.passwordExpireTime || -1))
           resolve(response)
         }).catch(error => {

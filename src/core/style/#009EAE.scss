@@ -1,0 +1,8 @@
+@use "sass:math";
+$--color-primary: #009EAE;
+@import "./element/mixins/mixins.scss";
+[newsale-theme = "#009EAE"]{
+  @import "./element/index.scss";
+  @import "./layout.scss";
+  @import "./zlTag.scss";
+}
