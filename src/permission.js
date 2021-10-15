@@ -1,8 +1,11 @@
 import router from '@/core/router'
+import store from './store'
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 // import { Message } from 'element-ui'
 import { getToken } from '@/core/utils/auth'
+
+import routes from '@/core/router/routes.json'
 //
 const whiteList = ['/login']
 
@@ -14,7 +17,16 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done() // if current page is dashboard will not trigger afterEach hook, so manually handle it
     } else {
-      next()
+      if (!store.getters['user/name']) {
+        store.dispatch('user/GetInfo').then(res => {
+          store.dispatch('router/GenerateRoutes', routes).then(() => {
+            router.addRoutes(store.getters['router/addRoutes'])
+            next({ ...to, replace: true })
+          })
+        })
+      } else {
+        next()
+      }
     }
   } else {
     if (whiteList.find(item => to.path.startsWith(item))) {

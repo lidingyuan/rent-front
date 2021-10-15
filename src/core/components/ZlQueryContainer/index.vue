@@ -43,7 +43,7 @@
       </div>
       <div class="result-body">
         <!-- <WaterMark :text="text" /> -->
-        <PixelWaterMark :number-list="id && id.split('')" />
+        <PixelWaterMark :number-list="id && (id+'').split('')" />
         <slot />
       </div>
       <div class="result-foot">

@@ -2,8 +2,9 @@ import request from '@/core/utils/request'
 
 export function login (loginInfo) {
   return request({
-    url: `/login?username=${loginInfo.username}&password=${loginInfo.password}&captcha=${loginInfo.checkcode}`,
-    method: 'post'
+    url: '/login',
+    method: 'post',
+    data: loginInfo
   })
 }
 

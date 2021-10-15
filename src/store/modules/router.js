@@ -40,7 +40,7 @@ const router = {
 
   state: {
     routes: constantRoutes,
-    addRoutes: [],
+    addRoutes: null,
     appList: []
   },
 

@@ -9,8 +9,7 @@ console.info('BASE_API', process.env.VUE_APP_BASE_API)
 const service = axios.create({
   baseURL: process.env.VUE_APP_BASE_API, // api 的 base_url
   timeout: 50000, // request timeout
-  // headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  headers: { 'Content-Type': 'application/json;charset=UTF-8' },
   withCredentials: true
 })
 

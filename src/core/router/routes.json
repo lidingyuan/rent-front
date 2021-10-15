@@ -1,0 +1,19 @@
+[
+  {
+    "name": "基础信息维护",
+    "idPath": "10000",
+    "url": "/base",
+    "icon": "BudgetManagement",
+    "id": "10000",
+    "redirect": "/base/Material"
+  },
+  {
+    "name": "材料管理",
+    "pid": "10000",
+    "idPath": "10000,10001",
+    "url": "/base/Material",
+    "icon": "BudgetManagement",
+    "id": "10001",
+    "component":"Material"
+  }
+]
