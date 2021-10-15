@@ -14,11 +14,7 @@ import '@/core/utils'
 
 import '@/core/filters'
 
-if (process.env.VUE_APP_PERMISSION_STATUS === 'independent' && process.env.NODE_ENV === 'development') {
-  require('@/core/permission/independent')
-} else {
-  require('@/core/permission/unite')
-}
+import '@/permission'
 
 Vue.use(ElementUI)
 

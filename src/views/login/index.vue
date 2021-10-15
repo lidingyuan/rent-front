@@ -121,7 +121,6 @@ export default {
   align-items: center;
 }
 
-
 .login-form {
   width: 372px;
   padding: 0 36px;

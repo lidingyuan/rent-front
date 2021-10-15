@@ -7,9 +7,7 @@ const BASE_URL = process.env.VUE_APP_BOP_BASE_URL
  */
 export function info () {
   return request({
-    url: BASE_URL + '/uc/user/info',
-    method: 'get',
-    headers: { 'X-App-Delegate': '1436152338003546113' },
-    params: { website: process.env.VUE_APP_SITE }
+    url: BASE_URL + '/user/info',
+    method: 'get'
   })
 }
