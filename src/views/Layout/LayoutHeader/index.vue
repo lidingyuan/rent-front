@@ -1,6 +1,5 @@
 <template>
   <div class="layout-header">
-    <div class="head-logo" />
     <div
       ref="head-menu"
       class="head-menu"
