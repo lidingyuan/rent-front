@@ -55,15 +55,16 @@
         :width="column.width"
         :sortable="column.sortable"
         :show-overflow-tooltip="column['show-overflow-tooltip']"
-      />
+      >
+        <template
+          v-if="column.field === 'projectId'"
+          #default="{row}"
+        >
+          {{ findProjectName(row.projectId) }}
+        </template>
+      </el-table-column>
       <el-table-column
-        prop="remarks"
-        width="200"
-        label="备注"
-        show-overflow-tooltip
-      />
-      <el-table-column
-        width="300"
+        width="350"
         label="操作"
         align="center"
       >
@@ -76,35 +77,26 @@
             编辑
           </el-button>
           <el-button
+            type="primary"
+            size="mini"
+            @click="temp = {...scope.row};orderDetailVisible = true"
+          >
+            详细信息
+          </el-button>
+          <el-button
+            type="primary"
+            size="mini"
+            @click="temp = {...scope.row};printVisible = true"
+          >
+            打印
+          </el-button>
+          <el-button
             type="danger"
             size="mini"
             @click="handleDelete(scope.row.id)"
           >
             删除
           </el-button>
-          <el-dropdown :hide-on-click="true">
-            <el-button
-              size="mini"
-              type="primary"
-            >
-              更多<i class="el-icon-arrow-down el-icon--right" />
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                icon="el-icon-edit"
-                @click.native="handleUpdate(scope.row)"
-              >
-                编辑
-              </el-dropdown-item>
-              <el-dropdown-item
-                icon="el-icon-delete"
-                style="color:#F56C6C;"
-                @click.native="handleDelete(scope.row)"
-              >
-                删除
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -133,32 +125,41 @@
           />
         </el-form-item>
         <el-form-item
-          label="编码"
-          prop="code"
+          label="项目"
+          prop="projectId"
           :rules="[{required:true, message:'必须字段'}]"
         >
-          <el-input v-model="temp.code" />
+          <el-select
+            v-model="temp.projectId"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in projectList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
         <el-form-item
-          label="名称"
-          prop="name"
+          label="日期"
+          prop="date"
           :rules="[{required:true, message:'必须字段'}]"
         >
-          <el-input v-model="temp.name" />
+          <el-date-picker
+            v-model="temp.date"
+            type="date"
+            placeholder="选择日期"
+          />
         </el-form-item>
         <el-form-item
-          label="关键字"
-          prop="key"
+          label="详细信息"
+          prop="detail"
           :rules="[{required:true, message:'必须字段'}]"
         >
-          <el-input v-model="temp.key" />
-        </el-form-item>
-        <el-form-item
-          label="类型"
-          prop="type"
-          :rules="[{required:true, message:'必须字段'}]"
-        >
-          <el-input v-model="temp.type" />
+          <el-button @click="orderDetailVisible = true">
+            详细信息
+          </el-button>
         </el-form-item>
       </el-form>
       <div
@@ -176,16 +177,33 @@
         </el-button>
       </div>
     </el-dialog>
+    <OrderDetail
+      :visible.sync="orderDetailVisible"
+      :data.sync="temp.detail"
+    />
+    <OrderPrint
+      v-model="printVisible"
+      :data="temp"
+      :find-project-name="findProjectName"
+    />
   </ZlQueryContainer>
 </template>
 
 <script>
-import * as MaterialApi from '@/api/MaterialApi.js'
+import * as OrderApi from '@/api/OrderApi.js'
+import * as ProjectApi from '@/api/ProjectApi.js'
+import OrderDetail from '../components/OrderDetail.vue'
+import OrderPrint from '../components/OrderPrint.vue'
+import * as DateUtil from '@/core/utils/DateUtil'
 
 export default {
-  name: 'Material',
+  name: 'Output',
+  components: { OrderDetail, OrderPrint },
   data () {
     return {
+      projectList: [],
+      orderDetailVisible: false,
+      printVisible: false,
       // ---查询条件
       page: {
         current: 1,
@@ -193,6 +211,7 @@ export default {
         size: 50
       },
       queryParam: {
+        type: '出库单'
       },
       dataList: [],
       // ---编辑弹窗
@@ -200,12 +219,10 @@ export default {
       dialogStatus: 'create',
       temp: {
         id: '',
-        code: '',
-        name: '',
-        key: '',
-        type: '',
-        orderTag: 1,
-        remarks: ''
+        projectId: '',
+        date: new Date(),
+        type: '出库单',
+        detail: ''
       },
       columns: [
         {
@@ -214,20 +231,14 @@ export default {
           width: 80
         },
         {
-          field: 'code',
-          title: '编码',
+          field: 'projectId',
+          title: '项目',
           width: 100,
           'show-overflow-tooltip': true
         },
         {
-          field: 'name',
-          title: '名称',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'key',
-          title: '关键字',
+          field: 'date',
+          title: '日期',
           width: 100,
           'show-overflow-tooltip': true
         },
@@ -236,12 +247,6 @@ export default {
           title: '类型',
           width: 100,
           'show-overflow-tooltip': true
-        },
-        {
-          field: 'orderTag',
-          title: '排序(整型)',
-          width: 80,
-          align: 'right'
         }
       ]
     }
@@ -256,9 +261,18 @@ export default {
     }
   },
   created () {
+    this.getProjectList()
     this.handleSearch()
   },
   methods: {
+    getProjectList () {
+      ProjectApi.list().then(res => {
+        this.projectList = res.data
+      })
+    },
+    findProjectName (id) {
+      return this.projectList.find(project => project.id === id)?.name
+    },
     // ---查询
     handleSearch () {
       this.page.current = 1
@@ -267,7 +281,7 @@ export default {
     },
     doSearch () {
       const options = { ...this.page, ...this.queryParam }
-      MaterialApi.page(options).then(res => {
+      OrderApi.page(options).then(res => {
         this.$objects.copyProperties(res.data, this.page)
         this.dataList = res.data.records
       })
@@ -284,7 +298,11 @@ export default {
     createData () {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
-          MaterialApi.save(this.temp).then(res => {
+          const tempData = {
+            ...this.temp,
+            date: DateUtil.format(this.temp.date) || this.temp.date
+          }
+          OrderApi.save(tempData).then(res => {
             this.handleSearch()
             this.dialogFormVisible = false
             this.$message({
@@ -308,8 +326,11 @@ export default {
     updateData () {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
-          const tempData = { ...this.temp }
-          MaterialApi.update(tempData).then(() => {
+          const tempData = {
+            ...this.temp,
+            date: DateUtil.format(this.temp.date) || this.temp.date
+          }
+          OrderApi.update(tempData).then(() => {
             this.handleSearch()
             this.dialogFormVisible = false
             this.$message({
@@ -328,7 +349,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        MaterialApi.del(row.id).then(res => {
+        OrderApi.del(row.id).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success',
@@ -341,12 +362,10 @@ export default {
     resetTemp () {
       this.temp = {
         id: '',
-        code: '',
-        name: '',
-        key: '',
-        type: '',
-        orderTag: 1,
-        remarks: ''
+        projectId: '',
+        date: new Date(),
+        type: '出库单',
+        detail: ''
       }
     }
     // ---其它
