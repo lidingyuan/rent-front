@@ -197,7 +197,7 @@ import OrderPrint from '../components/OrderPrint.vue'
 import * as DateUtil from '@/core/utils/DateUtil'
 
 export default {
-  name: 'Output',
+  name: 'Input',
   components: { OrderDetail, OrderPrint },
   data () {
     return {

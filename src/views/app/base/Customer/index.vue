@@ -76,29 +76,6 @@
           >
             删除
           </el-button>
-          <el-dropdown :hide-on-click="true">
-            <el-button
-              size="mini"
-              type="primary"
-            >
-              更多<i class="el-icon-arrow-down el-icon--right" />
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                icon="el-icon-edit"
-                @click.native="handleUpdate(scope.row)"
-              >
-                编辑
-              </el-dropdown-item>
-              <el-dropdown-item
-                icon="el-icon-delete"
-                style="color:#F56C6C;"
-                @click.native="handleDelete(scope.row)"
-              >
-                删除
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -132,6 +109,16 @@
           :rules="[{required:true, message:'必须字段'}]"
         >
           <el-input v-model="temp.name" />
+        </el-form-item>
+        <el-form-item
+          label="客户编码"
+          prop="custCompId"
+        >
+          <el-input
+            v-model="temp.custCompId"
+            :readonly="dialogStatus!=='create'"
+          />
+          <span style="font-size:12px;">客户编码选填，填上后可与对方同步出入库单，结算单</span>
         </el-form-item>
       </el-form>
       <div
@@ -173,6 +160,7 @@ export default {
       dialogStatus: 'create',
       temp: {
         id: '',
+        custCompId: null,
         name: ''
       },
       columns: [
@@ -228,7 +216,11 @@ export default {
     createData () {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
-          CustomerApi.save(this.temp).then(res => {
+          const tempData = { ...this.temp }
+          if (!tempData.custCompId) {
+            delete tempData.custCompId
+          }
+          CustomerApi.save(tempData).then(res => {
             this.handleSearch()
             this.dialogFormVisible = false
             this.$message({
@@ -253,6 +245,9 @@ export default {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
           const tempData = { ...this.temp }
+          if (!tempData.custCompId) {
+            delete tempData.custCompId
+          }
           CustomerApi.update(tempData).then(() => {
             this.handleSearch()
             this.dialogFormVisible = false
@@ -285,6 +280,7 @@ export default {
     resetTemp () {
       this.temp = {
         id: '',
+        custCompId: null,
         name: ''
       }
     }

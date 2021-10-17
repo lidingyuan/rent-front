@@ -76,29 +76,7 @@
           >
             删除
           </el-button>
-          <el-dropdown :hide-on-click="true">
-            <el-button
-              size="mini"
-              type="primary"
-            >
-              更多<i class="el-icon-arrow-down el-icon--right" />
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                icon="el-icon-edit"
-                @click.native="handleUpdate(scope.row)"
-              >
-                编辑
-              </el-dropdown-item>
-              <el-dropdown-item
-                icon="el-icon-delete"
-                style="color:#F56C6C;"
-                @click.native="handleDelete(scope.row)"
-              >
-                删除
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+          
         </template>
       </el-table-column>
     </el-table>
