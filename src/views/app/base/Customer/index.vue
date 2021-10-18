@@ -57,12 +57,6 @@
         :show-overflow-tooltip="column['show-overflow-tooltip']"
       />
       <el-table-column
-        prop="remarks"
-        width="200"
-        label="备注"
-        show-overflow-tooltip
-      />
-      <el-table-column
         width="300"
         label="操作"
         align="center"
@@ -82,7 +76,6 @@
           >
             删除
           </el-button>
-          
         </template>
       </el-table-column>
     </el-table>
@@ -111,32 +104,21 @@
           />
         </el-form-item>
         <el-form-item
-          label="编码"
-          prop="code"
-          :rules="[{required:true, message:'必须字段'}]"
-        >
-          <el-input v-model="temp.code" />
-        </el-form-item>
-        <el-form-item
-          label="名称"
+          label="客户名称"
           prop="name"
           :rules="[{required:true, message:'必须字段'}]"
         >
           <el-input v-model="temp.name" />
         </el-form-item>
         <el-form-item
-          label="关键字"
-          prop="key"
-          :rules="[{required:true, message:'必须字段'}]"
+          label="客户编码"
+          prop="custCompId"
         >
-          <el-input v-model="temp.key" />
-        </el-form-item>
-        <el-form-item
-          label="类型"
-          prop="type"
-          :rules="[{required:true, message:'必须字段'}]"
-        >
-          <el-input v-model="temp.type" />
+          <el-input
+            v-model="temp.custCompId"
+            :readonly="dialogStatus!=='create'"
+          />
+          <span style="font-size:12px;">客户编码选填，填上后可与对方同步出入库单，结算单</span>
         </el-form-item>
       </el-form>
       <div
@@ -158,10 +140,10 @@
 </template>
 
 <script>
-import * as MaterialApi from '@/api//MaterialApi.js'
+import * as CustomerApi from '@/api/CustomerApi.js'
 
 export default {
-  name: 'Material',
+  name: 'Customer',
   data () {
     return {
       // ---查询条件
@@ -178,10 +160,8 @@ export default {
       dialogStatus: 'create',
       temp: {
         id: '',
-        code: '',
-        name: '',
-        key: '',
-        type: ''
+        custCompId: null,
+        name: ''
       },
       columns: [
         {
@@ -190,26 +170,8 @@ export default {
           width: 80
         },
         {
-          field: 'code',
-          title: '编码',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
           field: 'name',
-          title: '名称',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'key',
-          title: '关键字',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'type',
-          title: '类型',
+          title: '客户名称',
           width: 100,
           'show-overflow-tooltip': true
         }
@@ -237,7 +199,7 @@ export default {
     },
     doSearch () {
       const options = { ...this.page, ...this.queryParam }
-      MaterialApi.page(options).then(res => {
+      CustomerApi.page(options).then(res => {
         this.$objects.copyProperties(res.data, this.page)
         this.dataList = res.data.records
       })
@@ -254,7 +216,11 @@ export default {
     createData () {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
-          MaterialApi.save(this.temp).then(res => {
+          const tempData = { ...this.temp }
+          if (!tempData.custCompId) {
+            delete tempData.custCompId
+          }
+          CustomerApi.save(tempData).then(res => {
             this.handleSearch()
             this.dialogFormVisible = false
             this.$message({
@@ -279,7 +245,10 @@ export default {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
           const tempData = { ...this.temp }
-          MaterialApi.update(tempData).then(() => {
+          if (!tempData.custCompId) {
+            delete tempData.custCompId
+          }
+          CustomerApi.update(tempData).then(() => {
             this.handleSearch()
             this.dialogFormVisible = false
             this.$message({
@@ -298,7 +267,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        MaterialApi.del(row.id).then(res => {
+        CustomerApi.del(row.id).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success',
@@ -311,10 +280,8 @@ export default {
     resetTemp () {
       this.temp = {
         id: '',
-        code: '',
-        name: '',
-        key: '',
-        type: ''
+        custCompId: null,
+        name: ''
       }
     }
     // ---其它

@@ -11,6 +11,7 @@ const user = {
     id: '',
     token: getToken(),
     name: '',
+    compName: '',
     avatar: '',
     authorities: [],
     menus: [],
@@ -22,6 +23,7 @@ const user = {
     token: state => state.token,
     avatar: state => state.avatar,
     name: state => state.name,
+    compName: state => state.compName,
     authorities: state => state.authorities,
     menus: state => state.menus,
     forceChangePassword: state => state.forceChangePassword
@@ -33,6 +35,9 @@ const user = {
     },
     SET_NAME: (state, name) => {
       state.name = name
+    },
+    SET_COMP_NAME: (state, compName) => {
+      state.compName = compName
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
@@ -85,6 +90,7 @@ const user = {
             commit('SET_MENUS', data.menus)
           }
           commit('SET_NAME', data.name)
+          commit('SET_COMP_NAME', data.compName)
           commit('SET_AVATAR', data.avatar || DEFAULT_AVATAR)
           commit('SET_ID', data.id)
           commit('SET_FORCE_CHANGE_PASSWORD', Number.parseInt(data.passwordExpireTime || -1))

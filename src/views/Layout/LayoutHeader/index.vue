@@ -1,6 +1,5 @@
 <template>
   <div class="layout-header">
-    <div class="head-logo" />
     <div
       ref="head-menu"
       class="head-menu"
@@ -124,7 +123,7 @@
               <div class="change-info" />
               完善信息
             </div>
-            <div>
+            <div @click="dialogVisible = true;subMenuVisible = false">
               <div class="change-password" />
               修改密码
             </div>
@@ -136,12 +135,47 @@
         </div>
       </div>
     </div>
+    <el-dialog
+      title="修改密码"
+      :visible.sync="dialogVisible"
+    >
+      <el-form
+        label-position="left"
+        label-width="100px"
+      >
+        <el-form-item label="旧密码">
+          <el-input
+            v-model="passwordForm.oldpassword"
+            type="password"
+          />
+        </el-form-item>
+        <el-form-item label="新密码">
+          <el-input
+            v-model="passwordForm.newpassword"
+            type="password"
+          />
+        </el-form-item>
+        <el-form-item label="确认新密码">
+          <el-input
+            v-model="passwordForm.checkpassword"
+            type="password"
+          />
+        </el-form-item>
+        <el-button
+          @click="changePassword"
+        >
+          更改密码
+        </el-button>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { constantRoutes } from '@/core/router'
 import { mapGetters, mapActions } from 'vuex'
+import MD5 from 'crypto-js/md5'
+import { changePassword } from '@/api/system/user'
 
 export default {
   name: 'LayoutHeader',
@@ -157,7 +191,13 @@ export default {
       constantRoutes: constantRoutes.filter(item => item.isApp),
       subMenuVisible: false,
       showMoreItems: false,
-      visibleSize: 0
+      visibleSize: 0,
+      dialogVisible: false,
+      passwordForm: {
+        oldpassword: '',
+        newpassword: '',
+        checkpassword: ''
+      }
     }
   },
   computed: {
@@ -219,6 +259,21 @@ export default {
     clear () {
       this.subMenuVisible = false
       this.showMoreItems = false
+    },
+    changePassword () {
+      if (this.passwordForm.checkpassword !== this.passwordForm.newpassword) {
+        return this.$message('新密码与确认新密码不同！')
+      }
+      if (this.passwordForm.oldpassword === this.passwordForm.newpassword) {
+        return this.$message('新密码与旧密码相同！')
+      }
+      changePassword({
+        oldpassword: MD5(this.passwordForm.oldpassword).toString(),
+        newpassword: MD5(this.passwordForm.newpassword).toString()
+      }).then(res => {
+        this.dialogVisible = false
+        this.$message('修改成功')
+      })
     }
   }
 }

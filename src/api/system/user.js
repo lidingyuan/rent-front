@@ -9,3 +9,11 @@ export function info () {
     method: 'get'
   })
 }
+
+export function changePassword (data) {
+  return request({
+    url: '/user/changePassword',
+    method: 'post',
+    data
+  })
+}

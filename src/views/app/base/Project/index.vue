@@ -57,12 +57,6 @@
         :show-overflow-tooltip="column['show-overflow-tooltip']"
       />
       <el-table-column
-        prop="remarks"
-        width="200"
-        label="备注"
-        show-overflow-tooltip
-      />
-      <el-table-column
         width="300"
         label="操作"
         align="center"
@@ -111,32 +105,28 @@
           />
         </el-form-item>
         <el-form-item
-          label="编码"
-          prop="code"
-          :rules="[{required:true, message:'必须字段'}]"
-        >
-          <el-input v-model="temp.code" />
-        </el-form-item>
-        <el-form-item
-          label="名称"
+          label="项目名称"
           prop="name"
           :rules="[{required:true, message:'必须字段'}]"
         >
           <el-input v-model="temp.name" />
         </el-form-item>
         <el-form-item
-          label="关键字"
-          prop="key"
+          label="客户"
+          prop="customerId"
           :rules="[{required:true, message:'必须字段'}]"
         >
-          <el-input v-model="temp.key" />
-        </el-form-item>
-        <el-form-item
-          label="类型"
-          prop="type"
-          :rules="[{required:true, message:'必须字段'}]"
-        >
-          <el-input v-model="temp.type" />
+          <el-select
+            v-model="temp.customerId"
+            placeholder="请选择"
+          >
+            <el-option
+              v-for="item in customerList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"
+            />
+          </el-select>
         </el-form-item>
       </el-form>
       <div
@@ -158,12 +148,14 @@
 </template>
 
 <script>
-import * as MaterialApi from '@/api//MaterialApi.js'
+import * as ProjectApi from '@/api/ProjectApi.js'
+import * as CustomerApi from '@/api/CustomerApi.js'
 
 export default {
-  name: 'Material',
+  name: 'Project',
   data () {
     return {
+      customerList: [],
       // ---查询条件
       page: {
         current: 1,
@@ -178,10 +170,8 @@ export default {
       dialogStatus: 'create',
       temp: {
         id: '',
-        code: '',
         name: '',
-        key: '',
-        type: ''
+        customerId: ''
       },
       columns: [
         {
@@ -190,26 +180,14 @@ export default {
           width: 80
         },
         {
-          field: 'code',
-          title: '编码',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
           field: 'name',
-          title: '名称',
+          title: '项目名称',
           width: 100,
           'show-overflow-tooltip': true
         },
         {
-          field: 'key',
-          title: '关键字',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'type',
-          title: '类型',
+          field: 'customerId',
+          title: '客户id',
           width: 100,
           'show-overflow-tooltip': true
         }
@@ -226,9 +204,15 @@ export default {
     }
   },
   created () {
+    this.getCustomerList()
     this.handleSearch()
   },
   methods: {
+    getCustomerList () {
+      CustomerApi.list().then(res => {
+        this.customerList = res.data
+      })
+    },
     // ---查询
     handleSearch () {
       this.page.current = 1
@@ -237,7 +221,7 @@ export default {
     },
     doSearch () {
       const options = { ...this.page, ...this.queryParam }
-      MaterialApi.page(options).then(res => {
+      ProjectApi.page(options).then(res => {
         this.$objects.copyProperties(res.data, this.page)
         this.dataList = res.data.records
       })
@@ -254,7 +238,7 @@ export default {
     createData () {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
-          MaterialApi.save(this.temp).then(res => {
+          ProjectApi.save(this.temp).then(res => {
             this.handleSearch()
             this.dialogFormVisible = false
             this.$message({
@@ -268,6 +252,7 @@ export default {
     },
     // ---修改
     handleUpdate (row) {
+      console.log(row)
       this.temp = Object.assign({}, row)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
@@ -279,7 +264,7 @@ export default {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
           const tempData = { ...this.temp }
-          MaterialApi.update(tempData).then(() => {
+          ProjectApi.update(tempData).then(() => {
             this.handleSearch()
             this.dialogFormVisible = false
             this.$message({
@@ -298,7 +283,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        MaterialApi.del(row.id).then(res => {
+        ProjectApi.del(row.id).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success',
@@ -311,10 +296,8 @@ export default {
     resetTemp () {
       this.temp = {
         id: '',
-        code: '',
         name: '',
-        key: '',
-        type: ''
+        customerId: ''
       }
     }
     // ---其它
