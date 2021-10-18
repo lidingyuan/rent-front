@@ -4,7 +4,7 @@ function resolve (dir) {
   return path.join(__dirname, dir)
 }
 
-const port = 8111
+const port = 8999
 const name = process.env.VUE_APP_TITLE
 
 module.exports = {

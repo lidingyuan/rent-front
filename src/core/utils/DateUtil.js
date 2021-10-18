@@ -153,7 +153,7 @@ export const parse = (value, formatStr = PARSE_DATE) => {
 // -----------------------------------------------------------------------------
 
 /**
- * 卷烟字符串是否日期格式 yyyy-MM-dd
+ * 字符串是否日期格式 yyyy-MM-dd
  * @param {String} dateStr
  */
 export const isDateFormat = (dateStr) => {

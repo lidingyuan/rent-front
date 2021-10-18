@@ -12,8 +12,6 @@ import '@/core/components/globalComp'
 
 import '@/core/utils'
 
-import '@/core/filters'
-
 import '@/permission'
 
 Vue.use(ElementUI)
