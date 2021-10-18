@@ -162,24 +162,6 @@
         >
           <el-input v-model="temp.type" />
         </el-form-item>
-        <el-form-item
-          label="排序码"
-          prop="orderTag"
-        >
-          <el-input-number
-            v-model.number="temp.orderTag"
-            :min="1"
-          />
-        </el-form-item>
-        <el-form-item
-          label="备注"
-          prop="remarks"
-        >
-          <el-input
-            v-model="temp.remarks"
-            type="textarea"
-          />
-        </el-form-item>
       </el-form>
       <div
         slot="footer"
@@ -200,7 +182,7 @@
 </template>
 
 <script>
-import * as MaterialApi from '@/api/MaterialApi.js'
+import * as MaterialApi from '@/api//MaterialApi.js'
 
 export default {
   name: 'Material',
@@ -224,9 +206,7 @@ export default {
         code: '',
         name: '',
         key: '',
-        type: '',
-        orderTag: 1,
-        remarks: ''
+        type: ''
       },
       columns: [
         {
@@ -257,12 +237,6 @@ export default {
           title: '类型',
           width: 100,
           'show-overflow-tooltip': true
-        },
-        {
-          field: 'orderTag',
-          title: '排序(整型)',
-          width: 80,
-          align: 'right'
         }
       ]
     }
@@ -365,9 +339,7 @@ export default {
         code: '',
         name: '',
         key: '',
-        type: '',
-        orderTag: 1,
-        remarks: ''
+        type: ''
       }
     }
     // ---其它
