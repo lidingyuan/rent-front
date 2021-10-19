@@ -66,7 +66,10 @@ export default {
     data () {
       if (this.data) {
         this.text = '修改'
-        this.form = JSON.parse(this.data)
+        this.form = {}
+        this.data.forEach(item => {
+          this.form[item.materialCode] = item.num
+        })
       } else {
         this.text = '保存'
         this.form = {}
@@ -81,7 +84,12 @@ export default {
   },
   methods: {
     save () {
-      this.$emit('update:data', JSON.stringify(this.form))
+      this.$emit('update:data', Object.keys(this.form).map(key => {
+        return {
+          materialCode: key,
+          num: this.form[key]
+        }
+      }).filter(item => item.num))
       this.$emit('update:visible', false)
     }
   }

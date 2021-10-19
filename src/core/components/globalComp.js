@@ -1,9 +1,9 @@
 import Vue from 'vue'
-import ZlQueryContainer from './ZlQueryContainer'
-import ZlTag from './ZlTag'
-import ScrollBox from './ScrollBox'
-import FollowMenu from './FollowMenu'
-import DateRangePicker from './DateRangePicker'
+const ZlQueryContainer = import(/* webpackChunkName: "pubComp" */ './ZlQueryContainer')
+const ZlTag = import(/* webpackChunkName: "pubComp" */ './ZlTag')
+const ScrollBox = import(/* webpackChunkName: "pubComp" */ './ScrollBox')
+const FollowMenu = import(/* webpackChunkName: "pubComp" */ './FollowMenu')
+const DateRangePicker = import(/* webpackChunkName: "pubComp" */ './DateRangePicker')
 const components = {
   ZlQueryContainer,
   ZlTag,

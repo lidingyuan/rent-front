@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Layout from '@/views/Layout'
-import ErrorPage404 from '@/views/error/ErrorPage404'
+const ErrorPage404 = import(/* webpackChunkName: "layout" */ '@/views/error/ErrorPage404')
+const Layout = import(/* webpackChunkName: "layout" */ '@/views/Layout')
 
 Vue.use(VueRouter)
 
@@ -10,7 +10,7 @@ export const defaultAliveAppList = ['Home', 'AppList']
 export const constantRoutes = [
   {
     path: '/login',
-    component: () => import('@/views/Login'),
+    component: () => import(/* webpackChunkName: "layout" */ '@/views/Login'),
     name: '登录',
     meta: { title: '登录', icon: 'dashboard' }
   },
@@ -24,7 +24,7 @@ export const constantRoutes = [
     children: [
       {
         path: '/home',
-        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/Home'),
+        component: () => import(/* webpackChunkName: "layout" */ '@/views/Home'),
         name: '',
         meta: { icon: 'dashboard', id: '0', idPath: '0' }
       }
@@ -40,7 +40,7 @@ export const constantRoutes = [
     children: [
       {
         path: '/app-list',
-        component: () => import(/* webpackChunkName: "dashboard" */ '@/views/AppList'),
+        component: () => import(/* webpackChunkName: "layout" */ '@/views/AppList'),
         name: '',
         meta: { icon: 'dashboard', id: '1', idPath: '1' }
       }

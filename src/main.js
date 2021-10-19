@@ -10,6 +10,8 @@ import '@/core/mixin/zlMixin'
 
 import '@/core/components/globalComp'
 
+import '@/core/filters'
+
 import '@/core/utils'
 
 import '@/permission'

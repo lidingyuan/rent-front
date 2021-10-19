@@ -211,7 +211,7 @@ export default {
         size: 50
       },
       queryParam: {
-        type: '入库单'
+        type: 2
       },
       dataList: [],
       // ---编辑弹窗
@@ -221,8 +221,8 @@ export default {
         id: '',
         projectId: '',
         date: new Date(),
-        type: '入库单',
-        detail: ''
+        type: 2,
+        detail: []
       },
       columns: [
         {
@@ -364,8 +364,8 @@ export default {
         id: '',
         projectId: '',
         date: new Date(),
-        type: '入库单',
-        detail: ''
+        type: 2,
+        detail: []
       }
     }
     // ---其它
