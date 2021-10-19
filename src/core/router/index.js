@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-const ErrorPage404 = import(/* webpackChunkName: "layout" */ '@/views/error/ErrorPage404')
-const Layout = import(/* webpackChunkName: "layout" */ '@/views/Layout')
 
 Vue.use(VueRouter)
 
@@ -18,7 +16,7 @@ export const constantRoutes = [
     path: '/',
     name: '首页',
     isApp: true,
-    component: Layout,
+    component: () => import(/* webpackChunkName: "layout" */ '@/views/Layout'),
     redirect: '/home',
     meta: { icon: 'dashboard', id: '0', idPath: '0', hideSide: true, hideAppMenu: true, hideNav: true },
     children: [
@@ -34,7 +32,7 @@ export const constantRoutes = [
     path: '/app-list-layout',
     name: '应用',
     isApp: true,
-    component: Layout,
+    component: () => import(/* webpackChunkName: "layout" */ '@/views/Layout'),
     redirect: '/app-list',
     meta: { icon: 'dashboard', id: '1', idPath: '1', hideSide: true, hideAppMenu: true, hideNav: true },
     children: [
@@ -50,7 +48,7 @@ export const constantRoutes = [
 
 export const endRoutes = [
   // 404 page must be placed at the end !!!
-  { path: '/404', component: ErrorPage404 },
+  { path: '/404', component: () => import(/* webpackChunkName: "layout" */ '@/views/error/ErrorPage404') },
   { path: '*', redirect: '/404', hidden: true }
 ]
 

@@ -3,14 +3,13 @@ import request from '@/core/utils/request'
 /**
  * 新增
  * @param {Object} options
- *        {Integer} projectId 必须：项目id
- *        {LocalDate} date 必须：日期
- *        {String} type 必须：类型
- *        {String} detail 必须：详细信息
+ *        {Integer} id 必须：
+ *        {String} materialTypeName 必须：类型
+ *        {Float} factor 必须：价格系数
  */
 export function save (options) {
   return request({
-    url: '/order/save',
+    url: '/materialType/save',
     method: 'post',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     data: options
@@ -20,14 +19,13 @@ export function save (options) {
 /**
  * 修改
  * @param {Object} options
- *        {Integer} projectId 必须：项目id
- *        {LocalDate} date 必须：日期
- *        {String} type 必须：类型
- *        {String} detail 必须：详细信息
+ *        {Integer} id 必须：
+ *        {String} materialTypeName 必须：类型
+ *        {Float} factor 必须：价格系数
  */
 export function update (options) {
   return request({
-    url: '/order/update',
+    url: '/materialType/update',
     method: 'put',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     data: options
@@ -44,7 +42,7 @@ export function del (id) {
     console.error('参数错误')
   }
   return request({
-    url: '/order/remove/' + id,
+    url: '/materialType/remove/' + id,
     method: 'delete'
   })
 }
@@ -59,7 +57,7 @@ export function detail (id) {
     console.error('参数错误')
   }
   return request({
-    url: '/order/detail/' + id,
+    url: '/materialType/detail/' + id,
     method: 'get'
   })
 }
@@ -70,7 +68,7 @@ export function detail (id) {
  */
 export function list (queryParam = {}) {
   return request({
-    url: '/order/list',
+    url: '/materialType/list',
     method: 'get',
     params: queryParam
   })
@@ -86,37 +84,8 @@ export function list (queryParam = {}) {
  */
 export function page (page, queryParam = {}) {
   return request({
-    url: '/order/page',
+    url: '/materialType/page',
     method: 'get',
     params: { ...page, ...queryParam }
-  })
-}
-
-/**
- * 查询
- * @param {Object} queryParam
- */
-export function detailList (queryParam = {}) {
-  return request({
-    url: '/order/detailList',
-    method: 'get',
-    params: queryParam
-  })
-}
-
-/**
- * 修改
- * @param {Object} options
- *        {Integer} projectId 必须：项目id
- *        {LocalDate} date 必须：日期
- *        {String} type 必须：类型
- *        {String} detail 必须：详细信息
- */
-export function updateState (options) {
-  return request({
-    url: '/order/updateState',
-    method: 'put',
-    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    data: options
   })
 }

@@ -62,13 +62,27 @@
         >
           {{ findProjectName(row.projectId) }}
         </template>
+        <template
+          v-else-if="column.field === 'state'"
+          #default="{row}"
+        >
+          {{ stateMap[row.state] }}
+        </template>
       </el-table-column>
       <el-table-column
-        width="350"
+        width="550"
         label="操作"
         align="center"
       >
         <template slot-scope="scope">
+          <el-button
+            v-if="scope.row.state === 1 || scope.row.state === 4"
+            type="primary"
+            size="mini"
+            @click="handleUpdateState(scope.row)"
+          >
+            确认订单
+          </el-button>
           <el-button
             type="primary"
             size="mini"
@@ -179,6 +193,7 @@
     </el-dialog>
     <OrderDetail
       :visible.sync="orderDetailVisible"
+      :order-id="temp.id"
       :data.sync="temp.detail"
     />
     <OrderPrint
@@ -247,8 +262,15 @@ export default {
           title: '类型',
           width: 100,
           'show-overflow-tooltip': true
+        },
+        {
+          field: 'state',
+          title: '状态',
+          width: 100,
+          'show-overflow-tooltip': true
         }
-      ]
+      ],
+      stateMap: ['完成', '待确认', '待对方确认', '撤销', '待撤销', '待对方确认撤销']
     }
   },
   watch: {
@@ -367,8 +389,23 @@ export default {
         type: 1,
         detail: []
       }
-    }
+    },
     // ---其它
+    handleUpdateState (row) {
+      this.$confirm('确认订单?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        OrderApi.updateState({ id: row.id }).then(res => {
+          this.$message({
+            message: '订单状态已改变',
+            type: 'success',
+            duration: 2000
+          })
+          this.handleSearch()
+        })
+      })
+    }
   }
 }
 </script>

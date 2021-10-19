@@ -133,46 +133,11 @@
           />
         </el-form-item>
         <el-form-item
-          label="编码"
-          prop="code"
+          label="类型"
+          prop="materialTypeName"
           :rules="[{required:true, message:'必须字段'}]"
         >
-          <el-input v-model="temp.code" />
-        </el-form-item>
-        <el-form-item
-          label="名称"
-          prop="name"
-          :rules="[{required:true, message:'必须字段'}]"
-        >
-          <el-input v-model="temp.name" />
-        </el-form-item>
-        <el-form-item
-          label="关键字"
-          prop="key"
-          :rules="[{required:true, message:'必须字段'}]"
-        >
-          <el-input v-model="temp.key" />
-        </el-form-item>
-        <el-form-item
-          label="单位"
-          prop="unit"
-          :rules="[{required:true, message:'必须字段'}]"
-        >
-          <el-input v-model="temp.unit" />
-        </el-form-item>
-        <el-form-item
-          label="价格系数"
-          prop="factor"
-          :rules="[{required:true, message:'必须字段'}]"
-        >
-          <el-input v-model="temp.factor" />
-        </el-form-item>
-        <el-form-item
-          label="类型id"
-          prop="typeId"
-          :rules="[{required:true, message:'必须字段'}]"
-        >
-          <el-input v-model="temp.typeId" />
+          <el-input v-model="temp.materialTypeName" />
         </el-form-item>
       </el-form>
       <div
@@ -194,10 +159,10 @@
 </template>
 
 <script>
-import * as MaterialApi from '@/api/MaterialApi.js'
+import * as MaterialTypeApi from '@/api/MaterialTypeApi.js'
 
 export default {
-  name: 'Material',
+  name: 'MaterialType',
   data () {
     return {
       // ---查询条件
@@ -214,12 +179,7 @@ export default {
       dialogStatus: 'create',
       temp: {
         id: '',
-        code: '',
-        name: '',
-        key: '',
-        unit: '',
-        factor: '',
-        typeId: ''
+        materialTypeName: ''
       },
       columns: [
         {
@@ -228,38 +188,8 @@ export default {
           width: 80
         },
         {
-          field: 'code',
-          title: '编码',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'name',
-          title: '名称',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'key',
-          title: '关键字',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'unit',
-          title: '单位',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'factor',
-          title: '价格系数',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'typeId',
-          title: '类型id',
+          field: 'materialTypeName',
+          title: '类型',
           width: 100,
           'show-overflow-tooltip': true
         }
@@ -287,7 +217,7 @@ export default {
     },
     doSearch () {
       const options = { ...this.page, ...this.queryParam }
-      MaterialApi.page(options).then(res => {
+      MaterialTypeApi.page(options).then(res => {
         this.$objects.copyProperties(res.data, this.page)
         this.dataList = res.data.records
       })
@@ -304,7 +234,7 @@ export default {
     createData () {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
-          MaterialApi.save(this.temp).then(res => {
+          MaterialTypeApi.save(this.temp).then(res => {
             this.handleSearch()
             this.dialogFormVisible = false
             this.$message({
@@ -329,7 +259,7 @@ export default {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
           const tempData = { ...this.temp }
-          MaterialApi.update(tempData).then(() => {
+          MaterialTypeApi.update(tempData).then(() => {
             this.handleSearch()
             this.dialogFormVisible = false
             this.$message({
@@ -348,7 +278,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        MaterialApi.del(row.id).then(res => {
+        MaterialTypeApi.del(row.id).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success',
@@ -361,12 +291,7 @@ export default {
     resetTemp () {
       this.temp = {
         id: '',
-        code: '',
-        name: '',
-        key: '',
-        unit: '',
-        factor: '',
-        typeId: ''
+        materialTypeName: ''
       }
     }
     // ---其它

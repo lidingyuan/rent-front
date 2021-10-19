@@ -45,11 +45,13 @@
 
 <script>
 import * as MaterialApi from '@/api/MaterialApi.js'
+import * as OrderApi from '@/api/OrderApi.js'
 export default {
   name: 'OrderDetail',
   props: {
     visible: Boolean,
-    data: String
+    data: Array,
+    orderId: [Number, String]
   },
   data () {
     return {
@@ -64,7 +66,7 @@ export default {
       this.orderDetailVisible = this.visible
     },
     data () {
-      if (this.data) {
+      if (this.data?.length) {
         this.text = '修改'
         this.form = {}
         this.data.forEach(item => {
@@ -73,6 +75,17 @@ export default {
       } else {
         this.text = '保存'
         this.form = {}
+      }
+    },
+    orderId () {
+      if (this.orderId) {
+        OrderApi.detailList({ orderId: this.orderId }).then(res => {
+          const from = {}
+          res.data.forEach(item => {
+            from[item.materialCode] = item.num
+          })
+          this.form = from
+        })
       }
     }
   },

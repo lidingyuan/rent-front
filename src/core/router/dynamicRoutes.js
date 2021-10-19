@@ -1,5 +1,5 @@
 
-const Layout = import(/* webpackChunkName: "layout" */ '@/views/Layout')
+const Layout = () => import(/* webpackChunkName: "layout" */ '@/views/Layout')
 
 const files = require.context('@/views/app', true, /^((?!components).)+\.vue$/, 'sync')
 const components = {}

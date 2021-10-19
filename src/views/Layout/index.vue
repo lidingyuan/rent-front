@@ -43,10 +43,9 @@ import LayoutSiderbar from './LayoutSiderbar'
 import LayoutNavbar from './LayoutNavbar'
 import EmptyPage from './EmptyPage'
 import { mapGetters } from 'vuex'
-const components = { LayoutHeader, LayoutSiderbar, LayoutNavbar }
 export default {
   name: 'Layout',
-  components: components,
+  components: { LayoutHeader, LayoutSiderbar, LayoutNavbar },
   data () {
     return {
       //

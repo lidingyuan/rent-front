@@ -4,8 +4,7 @@
     "idPath": "10000",
     "url": "/base",
     "icon": "BudgetManagement",
-    "id": "10000",
-    "redirect": "/base/Material"
+    "id": "10000"
   },
   {
     "name": "材料管理",
@@ -17,30 +16,39 @@
     "component":"Material"
   },
   {
-    "name": "客户管理",
+    "name": "材料类型管理",
     "pid": "10000",
     "idPath": "10000,10002",
-    "url": "/base/Customer",
+    "url": "/base/MaterialType",
     "icon": "BudgetManagement",
     "id": "10002",
+    "component":"MaterialType"
+  },
+  {
+    "name": "客户管理",
+    "pid": "10000",
+    "idPath": "10000,10003",
+    "url": "/base/Customer",
+    "icon": "BudgetManagement",
+    "id": "10003",
     "component":"Customer"
   },
   {
     "name": "项目管理",
     "pid": "10000",
-    "idPath": "10000,10003",
+    "idPath": "10000,10004",
     "url": "/base/Project",
     "icon": "BudgetManagement",
-    "id": "10003",
+    "id": "10004",
     "component":"Project"
   },
   {
     "name": "库存管理",
     "pid": "10000",
-    "idPath": "10000,10004",
+    "idPath": "10000,10005",
     "url": "/base/Stock",
     "icon": "BudgetManagement",
-    "id": "10004",
+    "id": "10005",
     "component":"Stock"
   },
   {
