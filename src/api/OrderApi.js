@@ -120,3 +120,20 @@ export function updateState (options) {
     data: options
   })
 }
+
+/**
+ * 修改
+ * @param {Object} options
+ *        {Integer} projectId 必须：项目id
+ *        {LocalDate} date 必须：日期
+ *        {String} type 必须：类型
+ *        {String} detail 必须：详细信息
+ */
+export function withdraw (options) {
+  return request({
+    url: '/order/withdraw',
+    method: 'put',
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    data: options
+  })
+}

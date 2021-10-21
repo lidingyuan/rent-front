@@ -84,6 +84,14 @@
             确认订单
           </el-button>
           <el-button
+            v-if="scope.row.state === 0"
+            type="primary"
+            size="mini"
+            @click="handleWithdraw(scope.row)"
+          >
+            撤销订单
+          </el-button>
+          <el-button
             type="primary"
             size="mini"
             @click="handleUpdate(scope.row)"
@@ -405,8 +413,24 @@ export default {
           this.handleSearch()
         })
       })
+    },
+    handleWithdraw (row) {
+      this.$confirm('撤销订单?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        OrderApi.withdraw({ id: row.id }).then(res => {
+          this.$message({
+            message: '订单状态已改变',
+            type: 'success',
+            duration: 2000
+          })
+          this.handleSearch()
+        })
+      })
     }
   }
+
 }
 </script>
 
