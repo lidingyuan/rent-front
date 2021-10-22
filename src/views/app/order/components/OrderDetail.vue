@@ -44,8 +44,8 @@
 </template>
 
 <script>
-import * as MaterialApi from '@/api/MaterialApi.js'
 import * as OrderApi from '@/api/OrderApi.js'
+import baseData from '@/core/service/baseDataService'
 export default {
   name: 'OrderDetail',
   props: {
@@ -90,9 +90,8 @@ export default {
     }
   },
   created () {
-    MaterialApi.list().then(res => {
-      this.materialList = res.data
-    })
+    console.log(baseData)
+    this.materialList = baseData.materialList
     this.orderDetailVisible = this.visible
   },
   methods: {

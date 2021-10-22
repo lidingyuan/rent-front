@@ -81,7 +81,15 @@
             size="mini"
             @click="handleUpdateState(scope.row)"
           >
-            确认订单
+            单据确认
+          </el-button>
+          <el-button
+            v-if="scope.row.state === 0"
+            type="danger"
+            size="mini"
+            @click="handleWithdraw(scope.row)"
+          >
+            撤销
           </el-button>
           <el-button
             type="primary"
@@ -103,13 +111,6 @@
             @click="temp = {...scope.row};printVisible = true"
           >
             打印
-          </el-button>
-          <el-button
-            type="danger"
-            size="mini"
-            @click="handleDelete(scope.row.id)"
-          >
-            删除
           </el-button>
         </template>
       </el-table-column>
@@ -392,13 +393,28 @@ export default {
     },
     // ---其它
     handleUpdateState (row) {
-      this.$confirm('确认订单?', '提示', {
+      this.$confirm('确认出库单?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        OrderApi.updateState({ id: row.id }).then(res => {
+        OrderApi.completeState({ id: row.id, type: this.queryParam.type }).then(res => {
           this.$message({
-            message: '订单状态已改变',
+            message: '出库单状态已改变',
+            type: 'success',
+            duration: 2000
+          })
+          this.handleSearch()
+        })
+      })
+    },
+    handleWithdraw (row) {
+      this.$confirm('撤销出库单?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        OrderApi.withdraw({ id: row.id }).then(res => {
+          this.$message({
+            message: '出库单状态已改变',
             type: 'success',
             duration: 2000
           })
@@ -407,6 +423,7 @@ export default {
       })
     }
   }
+
 }
 </script>
 

@@ -112,9 +112,9 @@ export function detailList (queryParam = {}) {
  *        {String} type 必须：类型
  *        {String} detail 必须：详细信息
  */
-export function updateState (options) {
+export function completeState (options) {
   return request({
-    url: '/order/updateState',
+    url: '/order/completeState',
     method: 'put',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     data: options

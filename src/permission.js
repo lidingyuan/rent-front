@@ -4,6 +4,7 @@ import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 // import { Message } from 'element-ui'
 import { getToken } from '@/core/utils/auth'
+import { initData } from '@/core/service/baseDataService'
 
 import routes from '@/core/router/routes.json'
 //
@@ -21,7 +22,9 @@ router.beforeEach((to, from, next) => {
         store.dispatch('user/GetInfo').then(res => {
           store.dispatch('router/GenerateRoutes', routes).then(() => {
             router.addRoutes(store.getters['router/addRoutes'])
-            next({ ...to, replace: true })
+            initData().then(() => {
+              next({ ...to, replace: true })
+            })
           })
         })
       } else {

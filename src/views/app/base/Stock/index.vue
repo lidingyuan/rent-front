@@ -53,10 +53,10 @@ export default {
   },
   created () {
     StockApi.list().then(res => {
-      const str = res.data[0]
-      if (str) {
-        this.form = JSON.parse(str)
-      }
+      this.form = {}
+      res.data.forEach(item => {
+        this.form[item.materialCode] = item.num
+      })
     })
     MaterialApi.list().then(res => {
       this.materialList = res.data

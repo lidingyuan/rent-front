@@ -64,7 +64,7 @@
 </template>
 
 <script>
-import * as MaterialApi from '@/api/MaterialApi.js'
+import baseData from '@/core/service/baseDataService'
 import { mapGetters } from 'vuex'
 export default {
   name: 'OrderPrint',
@@ -90,7 +90,7 @@ export default {
     data () {
       if (this.data.detail) {
         this.text = '修改'
-        this.form = JSON.parse(this.data.detail)
+        this.form = { ...this.data.detail }
       } else {
         this.text = '保存'
         this.form = {}
@@ -98,9 +98,7 @@ export default {
     }
   },
   created () {
-    MaterialApi.list().then(res => {
-      this.materialList = res.data
-    })
+    this.materialList = baseData.materialList
   },
   methods: {
     print () {
