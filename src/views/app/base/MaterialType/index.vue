@@ -139,6 +139,13 @@
         >
           <el-input v-model="temp.materialTypeName" />
         </el-form-item>
+        <el-form-item
+          label="单位转吨系数"
+          prop="transWeightFactor"
+          :rules="[{required:true, message:'必须字段'}]"
+        >
+          <el-input v-model="temp.transWeightFactor" />
+        </el-form-item>
       </el-form>
       <div
         slot="footer"
@@ -179,7 +186,8 @@ export default {
       dialogStatus: 'create',
       temp: {
         id: '',
-        materialTypeName: ''
+        materialTypeName: '',
+        transWeightFactor: ''
       },
       columns: [
         {
@@ -190,6 +198,12 @@ export default {
         {
           field: 'materialTypeName',
           title: '类型',
+          width: 100,
+          'show-overflow-tooltip': true
+        },
+        {
+          field: 'transWeightFactor',
+          title: '单位转吨系数',
           width: 100,
           'show-overflow-tooltip': true
         }
@@ -291,7 +305,8 @@ export default {
     resetTemp () {
       this.temp = {
         id: '',
-        materialTypeName: ''
+        materialTypeName: '',
+        transWeightFactor: ''
       }
     }
     // ---其它

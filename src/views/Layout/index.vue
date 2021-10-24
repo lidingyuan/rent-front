@@ -17,6 +17,7 @@
         <LayoutNavbar
           v-if="!currentApp.meta.hideNav"
           :active-page-list.sync="currentApp.activePageList"
+          @closeCurrentApp="closeCurrentApp"
           @openPage="openPage"
           @refreshPage="refreshPage"
         />
@@ -108,6 +109,13 @@ export default {
         this.temporaryPageList.pop()
         this.componentShow = true
       })
+    },
+    closeCurrentApp () {
+      const index = this.activeAppList.findIndex(item => item === this.currentApp)
+      index > -1 && this.activeAppList.splice(index, 1)
+      const lastApp = this.activeAppList[this.activeAppList.length - 1] || {}
+      const path = lastApp.currentPage || lastApp.path
+      this.$router.push(path || '/app-list')
     }
   }
 }

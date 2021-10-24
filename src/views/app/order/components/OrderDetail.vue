@@ -90,7 +90,6 @@ export default {
     }
   },
   created () {
-    console.log(baseData)
     this.materialList = baseData.materialList
     this.orderDetailVisible = this.visible
   },

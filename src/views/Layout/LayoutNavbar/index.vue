@@ -64,7 +64,7 @@ export default {
   watch: {
     activePageList () {
       if (!this.activePageList.length) {
-        this.returnParentPage()
+        this.closeCurrentApp()
       }
     }
   },
@@ -99,6 +99,10 @@ export default {
       this.position = [event.pageX, event.pageY]
       this.currentIndex = index
     },
+    closeCurrentApp () {
+      this.$emit('closeCurrentApp')
+    },
+    // 返回父节点
     returnParentPage () {
       const matched = this.$route.matched
       const parent = matched[matched.length - 2]

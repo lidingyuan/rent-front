@@ -76,5 +76,22 @@
     "icon": "BudgetManagement",
     "id": "20002",
     "component":"Input"
+  },
+  {
+    "name": "结算管理",
+    "idPath": "30000",
+    "url": "/statement",
+    "icon": "BudgetManagement",
+    "id": "30000",
+    "redirect": "/statement/statement"
+  },
+  {
+    "name": "结算单",
+    "pid": "30000",
+    "idPath": "30000,30001",
+    "url": "/statement/statement",
+    "icon": "BudgetManagement",
+    "id": "30001",
+    "component":"Statement"
   }
 ]

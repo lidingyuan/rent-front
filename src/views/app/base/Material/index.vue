@@ -7,11 +7,18 @@
     :columns="columns"
   >
     <template #queryParam>
-      <el-input
+      <el-select
+        v-model="queryParam.typeId"
         size="small"
-        placeholder="输入名称"
-        style="width: 200px"
-      />
+        placeholder="请选择"
+      >
+        <el-option
+          v-for="materialType in materialTypeList"
+          :key="materialType.id"
+          :label="materialType.materialTypeName"
+          :value="materialType.id"
+        />
+      </el-select>
       <el-button
         size="small"
         type="primary"
@@ -19,6 +26,12 @@
         @click="handleSearch"
       >
         查询
+      </el-button>
+      <el-button
+        size="small"
+        @click="queryParam = {}"
+      >
+        重置查询条件
       </el-button>
       <el-button
         size="small"
@@ -161,7 +174,7 @@
           <el-input v-model="temp.unit" />
         </el-form-item>
         <el-form-item
-          label="价格系数"
+          label="统计系数"
           prop="factor"
           :rules="[{required:true, message:'必须字段'}]"
         >
@@ -195,11 +208,13 @@
 
 <script>
 import * as MaterialApi from '@/api/MaterialApi.js'
+import baseData from '@/core/service/baseDataService'
 
 export default {
   name: 'Material',
   data () {
     return {
+      materialTypeList: [],
       // ---查询条件
       page: {
         current: 1,
@@ -253,7 +268,7 @@ export default {
         },
         {
           field: 'factor',
-          title: '价格系数',
+          title: '统计系数',
           width: 100,
           'show-overflow-tooltip': true
         },
@@ -276,6 +291,7 @@ export default {
     }
   },
   created () {
+    this.materialTypeList = baseData.materialTypeList
     this.handleSearch()
   },
   methods: {

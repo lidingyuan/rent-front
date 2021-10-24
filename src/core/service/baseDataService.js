@@ -7,7 +7,8 @@ import * as MaterialTypeApi from '@/api/MaterialTypeApi.js'
 const expiration = 1000 * 60 * 60 * 24
 
 const baseData = {
-  materialList: null
+  materialList: null,
+  materialTypeList: null
 }
 
 /**

@@ -7,11 +7,32 @@
     :columns="columns"
   >
     <template #queryParam>
-      <el-input
+      项目：
+      <el-select
+        v-model="queryParam.projectId"
         size="small"
-        placeholder="输入名称"
-        style="width: 200px"
-      />
+        placeholder="请选择"
+      >
+        <el-option
+          v-for="project in projectList"
+          :key="project.id"
+          :label="project.name"
+          :value="project.id"
+        />
+      </el-select>
+      状态：
+      <el-select
+        v-model="queryParam.state"
+        size="small"
+        placeholder="请选择"
+      >
+        <el-option
+          v-for="(state,index) in stateMap"
+          :key="index"
+          :label="state"
+          :value="index"
+        />
+      </el-select>
       <el-button
         size="small"
         type="primary"
@@ -163,6 +184,7 @@
         >
           <el-date-picker
             v-model="temp.date"
+            value-format="yyyy-MM-dd"
             type="date"
             placeholder="选择日期"
           />

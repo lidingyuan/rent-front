@@ -7,32 +7,11 @@
     :columns="columns"
   >
     <template #queryParam>
-      项目：
-      <el-select
-        v-model="queryParam.projectId"
+      <el-input
         size="small"
-        placeholder="请选择"
-      >
-        <el-option
-          v-for="project in projectList"
-          :key="project.id"
-          :label="project.name"
-          :value="project.id"
-        />
-      </el-select>
-      状态：
-      <el-select
-        v-model="queryParam.state"
-        size="small"
-        placeholder="请选择"
-      >
-        <el-option
-          v-for="(state,index) in stateMap"
-          :key="index"
-          :label="state"
-          :value="index"
-        />
-      </el-select>
+        placeholder="输入名称"
+        style="width: 200px"
+      />
       <el-button
         size="small"
         type="primary"
@@ -76,42 +55,19 @@
         :width="column.width"
         :sortable="column.sortable"
         :show-overflow-tooltip="column['show-overflow-tooltip']"
-      >
-        <template
-          v-if="column.field === 'projectId'"
-          #default="{row}"
-        >
-          {{ findProjectName(row.projectId) }}
-        </template>
-        <template
-          v-else-if="column.field === 'state'"
-          #default="{row}"
-        >
-          {{ stateMap[row.state] }}
-        </template>
-      </el-table-column>
+      />
       <el-table-column
-        width="550"
+        prop="remarks"
+        width="200"
+        label="备注"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        width="300"
         label="操作"
         align="center"
       >
         <template slot-scope="scope">
-          <el-button
-            v-if="scope.row.state === 1 || scope.row.state === 4"
-            type="primary"
-            size="mini"
-            @click="handleUpdateState(scope.row)"
-          >
-            单据确认
-          </el-button>
-          <el-button
-            v-if="scope.row.state === 0"
-            type="danger"
-            size="mini"
-            @click="handleWithdraw(scope.row)"
-          >
-            撤销
-          </el-button>
           <el-button
             type="primary"
             size="mini"
@@ -120,19 +76,35 @@
             编辑
           </el-button>
           <el-button
-            type="primary"
+            type="danger"
             size="mini"
-            @click="temp = {...scope.row};orderDetailVisible = true"
+            @click="handleDelete(scope.row.id)"
           >
-            详细信息
+            删除
           </el-button>
-          <el-button
-            type="primary"
-            size="mini"
-            @click="temp = {...scope.row};printVisible = true"
-          >
-            打印
-          </el-button>
+          <el-dropdown :hide-on-click="true">
+            <el-button
+              size="mini"
+              type="primary"
+            >
+              更多<i class="el-icon-arrow-down el-icon--right" />
+            </el-button>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item
+                icon="el-icon-edit"
+                @click.native="handleUpdate(scope.row)"
+              >
+                编辑
+              </el-dropdown-item>
+              <el-dropdown-item
+                icon="el-icon-delete"
+                style="color:#F56C6C;"
+                @click.native="handleDelete(scope.row)"
+              >
+                删除
+              </el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -178,25 +150,28 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          label="日期"
-          prop="date"
+          label="开始日期"
+          prop="beginDate"
           :rules="[{required:true, message:'必须字段'}]"
         >
           <el-date-picker
-            v-model="temp.date"
+            v-model="temp.beginDate"
             value-format="yyyy-MM-dd"
             type="date"
             placeholder="选择日期"
           />
         </el-form-item>
         <el-form-item
-          label="详细信息"
-          prop="detail"
+          label="结束日期"
+          prop="endDate"
           :rules="[{required:true, message:'必须字段'}]"
         >
-          <el-button @click="orderDetailVisible = true">
-            详细信息
-          </el-button>
+          <el-date-picker
+            v-model="temp.endDate"
+            value-format="yyyy-MM-dd"
+            type="date"
+            placeholder="选择日期"
+          />
         </el-form-item>
       </el-form>
       <div
@@ -214,34 +189,17 @@
         </el-button>
       </div>
     </el-dialog>
-    <OrderDetail
-      :visible.sync="orderDetailVisible"
-      :order-id="temp.id"
-      :data.sync="temp.detail"
-    />
-    <OrderPrint
-      v-model="printVisible"
-      :data="temp"
-      :find-project-name="findProjectName"
-    />
   </ZlQueryContainer>
 </template>
 
 <script>
-import * as OrderApi from '@/api/OrderApi.js'
+import * as StatementApi from '@/api/StatementApi.js'
 import * as ProjectApi from '@/api/ProjectApi.js'
-import OrderDetail from '../components/OrderDetail.vue'
-import OrderPrint from '../components/OrderPrint.vue'
-import * as DateUtil from '@/core/utils/DateUtil'
 
 export default {
-  name: 'Output',
-  components: { OrderDetail, OrderPrint },
+  name: 'Statement',
   data () {
     return {
-      projectList: [],
-      orderDetailVisible: false,
-      printVisible: false,
       // ---查询条件
       page: {
         current: 1,
@@ -249,7 +207,6 @@ export default {
         size: 50
       },
       queryParam: {
-        type: 1
       },
       dataList: [],
       // ---编辑弹窗
@@ -258,9 +215,8 @@ export default {
       temp: {
         id: '',
         projectId: '',
-        date: new Date(),
-        type: 1,
-        detail: []
+        beginDate: '',
+        endDate: ''
       },
       columns: [
         {
@@ -270,19 +226,25 @@ export default {
         },
         {
           field: 'projectId',
-          title: '项目',
+          title: '项目id',
           width: 100,
           'show-overflow-tooltip': true
         },
         {
-          field: 'date',
-          title: '日期',
+          field: 'beginDate',
+          title: '开始日期',
           width: 100,
           'show-overflow-tooltip': true
         },
         {
-          field: 'type',
-          title: '类型',
+          field: 'endDate',
+          title: '结束日期',
+          width: 100,
+          'show-overflow-tooltip': true
+        },
+        {
+          field: 'userCompId',
+          title: '用户公司id',
           width: 100,
           'show-overflow-tooltip': true
         },
@@ -291,9 +253,20 @@ export default {
           title: '状态',
           width: 100,
           'show-overflow-tooltip': true
+        },
+        {
+          field: 'connectId',
+          title: '关联结算单id',
+          width: 100,
+          'show-overflow-tooltip': true
+        },
+        {
+          field: 'lastId',
+          title: '上次结算单id',
+          width: 100,
+          'show-overflow-tooltip': true
         }
-      ],
-      stateMap: ['完成', '待确认', '待对方确认', '撤销', '待撤销', '待对方确认撤销']
+      ]
     }
   },
   watch: {
@@ -315,9 +288,6 @@ export default {
         this.projectList = res.data
       })
     },
-    findProjectName (id) {
-      return this.projectList.find(project => project.id === id)?.name
-    },
     // ---查询
     handleSearch () {
       this.page.current = 1
@@ -326,7 +296,7 @@ export default {
     },
     doSearch () {
       const options = { ...this.page, ...this.queryParam }
-      OrderApi.page(options).then(res => {
+      StatementApi.page(options).then(res => {
         this.$objects.copyProperties(res.data, this.page)
         this.dataList = res.data.records
       })
@@ -343,11 +313,7 @@ export default {
     createData () {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
-          const tempData = {
-            ...this.temp,
-            date: DateUtil.format(this.temp.date) || this.temp.date
-          }
-          OrderApi.save(tempData).then(res => {
+          StatementApi.save(this.temp).then(res => {
             this.handleSearch()
             this.dialogFormVisible = false
             this.$message({
@@ -371,11 +337,8 @@ export default {
     updateData () {
       this.$refs.dataForm.validate((valid) => {
         if (valid) {
-          const tempData = {
-            ...this.temp,
-            date: DateUtil.format(this.temp.date) || this.temp.date
-          }
-          OrderApi.update(tempData).then(() => {
+          const tempData = { ...this.temp }
+          StatementApi.update(tempData).then(() => {
             this.handleSearch()
             this.dialogFormVisible = false
             this.$message({
@@ -394,7 +357,7 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        OrderApi.del(row.id).then(res => {
+        StatementApi.del(row.id).then(res => {
           this.$message({
             message: '删除成功',
             type: 'success',
@@ -408,44 +371,12 @@ export default {
       this.temp = {
         id: '',
         projectId: '',
-        date: new Date(),
-        type: 1,
-        detail: []
+        beginDate: '',
+        endDate: ''
       }
-    },
-    // ---其它
-    handleUpdateState (row) {
-      this.$confirm('确认出库单?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(() => {
-        OrderApi.completeState({ id: row.id, type: this.queryParam.type }).then(res => {
-          this.$message({
-            message: '出库单状态已改变',
-            type: 'success',
-            duration: 2000
-          })
-          this.handleSearch()
-        })
-      })
-    },
-    handleWithdraw (row) {
-      this.$confirm('撤销出库单?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消'
-      }).then(() => {
-        OrderApi.withdraw({ id: row.id }).then(res => {
-          this.$message({
-            message: '出库单状态已改变',
-            type: 'success',
-            duration: 2000
-          })
-          this.handleSearch()
-        })
-      })
     }
+    // ---其它
   }
-
 }
 </script>
 
