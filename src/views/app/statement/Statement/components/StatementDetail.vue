@@ -1,11 +1,13 @@
 <template>
   <el-dialog
     class="statement-detail"
-    :visible="orderDetailVisible"
+    :visible.sync="statementDetailVisible"
     fullscreen
     @update:visible="val=>this.$emit('update:visible', val)"
   >
-    123
+    <el-form>
+      结算日期：{{ statementDetail.date }}
+    </el-form>
   </el-dialog>
 </template>
 
@@ -18,13 +20,19 @@ export default {
   },
   data () {
     return {
-      statementDetail: {}
+      statementDetail: {},
+      statementDetailVisible: false
+    }
+  },
+  watch: {
+    id () {
+      this.statementDetailVisible = true
+      StatementApi.detail(this.id).then(res => {
+        this.statementDetail = res.data
+      })
     }
   },
   created () {
-    StatementApi.detail(this.id).then(res => {
-      this.statementDetail = res.data
-    })
   },
   methods: {
 

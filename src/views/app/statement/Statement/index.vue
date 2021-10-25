@@ -147,7 +147,7 @@
         </el-button>
       </div>
     </el-dialog>
-    <StatementDetail />
+    <StatementDetail :id="detailId" />
   </ZlQueryContainer>
 </template>
 
@@ -167,6 +167,8 @@ export default {
         total: 0,
         size: 50
       },
+      projectList: [],
+      detailId: null,
       queryParam: {
       },
       dataList: [],
@@ -263,10 +265,8 @@ export default {
     },
     // ---详情
     handleDetail (row) {
+      this.detailId = row.id
       this.detailVisible = true
-      this.$nextTick(() => {
-        this.$refs.dataForm.clearValidate()
-      })
     },
     resetTemp () {
       this.temp = {
