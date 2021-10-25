@@ -73,8 +73,9 @@ export function detail (id) {
     console.error('参数错误')
   }
   return request({
-    url: '/statement/detail/' + id,
-    method: 'get'
+    url: '/statement/detail',
+    method: 'get',
+    params: { id }
   })
 }
 

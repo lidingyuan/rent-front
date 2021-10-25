@@ -71,40 +71,10 @@
           <el-button
             type="primary"
             size="mini"
-            @click="handleUpdate(scope.row)"
+            @click="handleDetail(scope.row)"
           >
-            编辑
+            查看详情
           </el-button>
-          <el-button
-            type="danger"
-            size="mini"
-            @click="handleDelete(scope.row.id)"
-          >
-            删除
-          </el-button>
-          <el-dropdown :hide-on-click="true">
-            <el-button
-              size="mini"
-              type="primary"
-            >
-              更多<i class="el-icon-arrow-down el-icon--right" />
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                icon="el-icon-edit"
-                @click.native="handleUpdate(scope.row)"
-              >
-                编辑
-              </el-dropdown-item>
-              <el-dropdown-item
-                icon="el-icon-delete"
-                style="color:#F56C6C;"
-                @click.native="handleDelete(scope.row)"
-              >
-                删除
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -151,23 +121,11 @@
         </el-form-item>
         <el-form-item
           label="开始日期"
-          prop="beginDate"
+          prop="date"
           :rules="[{required:true, message:'必须字段'}]"
         >
           <el-date-picker
-            v-model="temp.beginDate"
-            value-format="yyyy-MM-dd"
-            type="date"
-            placeholder="选择日期"
-          />
-        </el-form-item>
-        <el-form-item
-          label="结束日期"
-          prop="endDate"
-          :rules="[{required:true, message:'必须字段'}]"
-        >
-          <el-date-picker
-            v-model="temp.endDate"
+            v-model="temp.date"
             value-format="yyyy-MM-dd"
             type="date"
             placeholder="选择日期"
@@ -189,15 +147,18 @@
         </el-button>
       </div>
     </el-dialog>
+    <StatementDetail />
   </ZlQueryContainer>
 </template>
 
 <script>
 import * as StatementApi from '@/api/StatementApi.js'
 import * as ProjectApi from '@/api/ProjectApi.js'
+import StatementDetail from './components/StatementDetail.vue'
 
 export default {
   name: 'Statement',
+  components: { StatementDetail },
   data () {
     return {
       // ---查询条件
@@ -215,8 +176,7 @@ export default {
       temp: {
         id: '',
         projectId: '',
-        beginDate: '',
-        endDate: ''
+        date: ''
       },
       columns: [
         {
@@ -231,38 +191,14 @@ export default {
           'show-overflow-tooltip': true
         },
         {
-          field: 'beginDate',
-          title: '开始日期',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'endDate',
-          title: '结束日期',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'userCompId',
-          title: '用户公司id',
+          field: 'date',
+          title: '结算日期',
           width: 100,
           'show-overflow-tooltip': true
         },
         {
           field: 'state',
           title: '状态',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'connectId',
-          title: '关联结算单id',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'lastId',
-          title: '上次结算单id',
           width: 100,
           'show-overflow-tooltip': true
         }
@@ -325,54 +261,18 @@ export default {
         }
       })
     },
-    // ---修改
-    handleUpdate (row) {
-      this.temp = Object.assign({}, row)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
+    // ---详情
+    handleDetail (row) {
+      this.detailVisible = true
       this.$nextTick(() => {
         this.$refs.dataForm.clearValidate()
-      })
-    },
-    updateData () {
-      this.$refs.dataForm.validate((valid) => {
-        if (valid) {
-          const tempData = { ...this.temp }
-          StatementApi.update(tempData).then(() => {
-            this.handleSearch()
-            this.dialogFormVisible = false
-            this.$message({
-              message: '更新成功',
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
-    // ---删除
-    handleDelete (row) {
-      this.$confirm('确认删除?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        StatementApi.del(row.id).then(res => {
-          this.$message({
-            message: '删除成功',
-            type: 'success',
-            duration: 2000
-          })
-          this.handleSearch()
-        })
       })
     },
     resetTemp () {
       this.temp = {
         id: '',
         projectId: '',
-        beginDate: '',
-        endDate: ''
+        date: ''
       }
     }
     // ---其它
