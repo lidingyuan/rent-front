@@ -55,7 +55,20 @@
         :width="column.width"
         :sortable="column.sortable"
         :show-overflow-tooltip="column['show-overflow-tooltip']"
-      />
+      >
+        <template
+          v-if="column.field === 'projectId'"
+          #default="{row}"
+        >
+          {{ findProjectName(row.projectId) }}
+        </template>
+        <template
+          v-else-if="column.field === 'state'"
+          #default="{row}"
+        >
+          {{ stateMap[row.state] }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="remarks"
         width="200"
@@ -120,7 +133,7 @@
           </el-select>
         </el-form-item>
         <el-form-item
-          label="开始日期"
+          label="结算日期"
           prop="date"
           :rules="[{required:true, message:'必须字段'}]"
         >
@@ -161,6 +174,7 @@ export default {
   components: { StatementDetail },
   data () {
     return {
+      stateMap: ['完成', '待确认', '待对方确认', '撤销', '待撤销', '待对方确认撤销'],
       // ---查询条件
       page: {
         current: 1,
@@ -225,6 +239,9 @@ export default {
       ProjectApi.list().then(res => {
         this.projectList = res.data
       })
+    },
+    findProjectName (id) {
+      return this.projectList.find(project => project.id === id)?.name
     },
     // ---查询
     handleSearch () {
