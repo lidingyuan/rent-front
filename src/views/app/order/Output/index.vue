@@ -23,6 +23,8 @@
       状态：
       <el-select
         v-model="queryParam.state"
+        multiple
+        collapse-tags
         size="small"
         placeholder="请选择"
       >
@@ -249,7 +251,8 @@ export default {
         size: 50
       },
       queryParam: {
-        type: 1
+        type: 1,
+        state: [0, 1, 2, 4, 5]
       },
       dataList: [],
       // ---编辑弹窗

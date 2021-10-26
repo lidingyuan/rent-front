@@ -1,7 +1,9 @@
 <template>
   <div class="login">
     <div class="login-background">
-      <div class="login-title" />
+      <div class="login-title">
+        钢管租赁系统
+      </div>
     </div>
     <div class="login-side">
       <div class="login-logo" />
@@ -114,11 +116,15 @@ export default {
   width: 0;
   height: 100%;
   flex-grow: 1;
-  background: url("~@/assets/img/login-v2/login-background.png") no-repeat 0/100%
-    100%;
+  background: #307FF5;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+.login-title{
+  font-size: 64px;
+  font-style: italic;
+  color: #fff;
 }
 
 .login-form {

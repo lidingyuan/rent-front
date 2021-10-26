@@ -87,23 +87,24 @@ export default {
   },
   methods: {
     visibilityListener () {
+      console.log(123)
       const markList = [...this.$parent.$el.getElementsByClassName('water-mark')]
       const mark = markList.find(mark => {
         return mark === this.$el
       })
-      if (this.style !== mark.getAttribute('style')) {
-        const style = this.style
-        this.style = ''
-        this.$nextTick(() => {
-          this.style = style
-        })
-      }
       if (!mark) {
         const emptymark = document.createElement('div')
         emptymark.innerHTML = '文档结构被破坏，重新加载'
         emptymark.style = 'position:fixed;top:0;bottom:0;left:0;right:0;z-index:999999;background:#fff;'
         document.body.appendChild(emptymark)
         location.reload()
+      }
+      if (this.style !== mark.getAttribute('style')) {
+        const style = this.style
+        this.style = ''
+        this.$nextTick(() => {
+          this.style = style
+        })
       }
     }
   }

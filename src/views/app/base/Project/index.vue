@@ -127,6 +127,15 @@
             />
           </el-select>
         </el-form-item>
+        <el-form-item
+          label="租金"
+          prop="priceList"
+          :rules="[{required:true, message:'必须字段'}]"
+        >
+          <el-button @click="projectPriceVisible = true">
+            设置
+          </el-button>
+        </el-form-item>
       </el-form>
       <div
         slot="footer"
@@ -143,17 +152,24 @@
         </el-button>
       </div>
     </el-dialog>
+    <ProjectPrice
+      :visible.sync="projectPriceVisible"
+      :price-list.sync="temp.priceList"
+    />
   </ZlQueryContainer>
 </template>
 
 <script>
 import * as ProjectApi from '@/api/ProjectApi.js'
 import * as CustomerApi from '@/api/CustomerApi.js'
+import ProjectPrice from './components/ProjectPrice.vue'
 
 export default {
   name: 'Project',
+  components: { ProjectPrice },
   data () {
     return {
+      projectPriceVisible: false,
       customerList: [],
       // ---查询条件
       page: {
@@ -170,7 +186,8 @@ export default {
       temp: {
         id: '',
         name: '',
-        customerId: ''
+        customerId: '',
+        priceList: []
       },
       columns: [
         {
@@ -251,7 +268,6 @@ export default {
     },
     // ---修改
     handleUpdate (row) {
-      console.log(row)
       this.temp = Object.assign({}, row)
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
@@ -296,7 +312,8 @@ export default {
       this.temp = {
         id: '',
         name: '',
-        customerId: ''
+        customerId: '',
+        priceList: []
       }
     }
     // ---其它

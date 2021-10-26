@@ -286,7 +286,6 @@ export function defaultCellMouseEnterShowBg ({ rowIndex }, rowSpanArr = []) {
       break
     }
   }
-  console.log(element)
   return element
 }
 /**

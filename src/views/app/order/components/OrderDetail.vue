@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     class="order-detail"
-    :visible="orderDetailVisible"
+    :visible.sync="orderDetailVisible"
     fullscreen
     @update:visible="val=>this.$emit('update:visible', val)"
   >
@@ -64,6 +64,9 @@ export default {
   watch: {
     visible () {
       this.orderDetailVisible = this.visible
+    },
+    orderDetailVisible (val) {
+      this.$emit('update:visible', val)
     },
     data () {
       if (this.data?.length) {

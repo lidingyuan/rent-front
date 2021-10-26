@@ -191,7 +191,7 @@ export default {
       constantRoutes: constantRoutes.filter(item => item.isApp),
       subMenuVisible: false,
       showMoreItems: false,
-      visibleSize: 0,
+      visibleSize: 1,
       dialogVisible: false,
       passwordForm: {
         oldpassword: '',

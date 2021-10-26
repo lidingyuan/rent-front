@@ -41,7 +41,6 @@ export default {
   name: 'StatementDetail',
   filters: {
     filterNum (material) {
-      console.log(material)
       if (material.type === 3) {
         return '结余' + material.num
       }
