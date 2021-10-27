@@ -72,7 +72,7 @@
           <el-button
             type="danger"
             size="mini"
-            @click="handleDelete(scope.row.id)"
+            @click="handleDelete(scope.row)"
           >
             删除
           </el-button>

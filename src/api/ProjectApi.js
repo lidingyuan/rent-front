@@ -40,23 +40,9 @@ export function del (id) {
     console.error('参数错误')
   }
   return request({
-    url: '/project/remove/' + id,
-    method: 'delete'
-  })
-}
-
-/**
- * 详情
- * @param {String} id ID
- */
-export function detail (id) {
-  if (!id) {
-    // eslint-disable-next-line no-console
-    console.error('参数错误')
-  }
-  return request({
-    url: '/project/detail/' + id,
-    method: 'get'
+    url: '/project/remove',
+    method: 'delete',
+    params: { id }
   })
 }
 
@@ -67,6 +53,18 @@ export function detail (id) {
 export function list (queryParam = {}) {
   return request({
     url: '/project/list',
+    method: 'get',
+    params: queryParam
+  })
+}
+
+/**
+ * 查询
+ * @param {Object} queryParam
+ */
+export function projectPriceList (queryParam = {}) {
+  return request({
+    url: '/project/projectPriceList',
     method: 'get',
     params: queryParam
   })

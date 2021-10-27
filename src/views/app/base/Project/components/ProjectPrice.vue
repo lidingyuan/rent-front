@@ -88,10 +88,22 @@ export default {
     },
     projectPriceVisible (val) {
       this.$emit('update:visible', val)
+    },
+    priceList () {
+      this.dataList = baseData.materialTypeList.filter(item => item.priceRule === 0).map(type => {
+        const item = this.priceList.find(item => type.id === item.materialTypeId) || {}
+        return {
+          materialTypeId: type.id,
+          materialTypeName: type.materialTypeName,
+          price: 0,
+          transWeightFactor: type.transWeightFactor,
+          ...item
+        }
+      })
     }
   },
   created () {
-    this.dataList = baseData.materialTypeList.map(item => {
+    this.dataList = baseData.materialTypeList.filter(item => item.priceRule === 0).map(item => {
       return {
         materialTypeId: item.id,
         materialTypeName: item.materialTypeName,
@@ -103,11 +115,15 @@ export default {
   methods: {
     save () {
       this.$emit('update:priceList', this.dataList.map(item => {
-        return {
+        const obj = {
           materialTypeId: item.materialTypeId,
           price: Number(item.price),
           transWeightFactor: Number(item.transWeightFactor)
         }
+        if (item.projectId) {
+          obj.projectId = item.projectId
+        }
+        return obj
       }))
       this.projectPriceVisible = false
     }

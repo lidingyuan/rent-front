@@ -10,6 +10,7 @@
       项目：
       <el-select
         v-model="queryParam.projectId"
+        clearable
         size="small"
         placeholder="请选择"
       >
@@ -131,7 +132,7 @@
           <el-button
             type="primary"
             size="mini"
-            @click="temp = {...scope.row};printVisible = true"
+            @click="print(scope.row)"
           >
             打印
           </el-button>
@@ -231,7 +232,7 @@
 
 <script>
 import * as OrderApi from '@/api/OrderApi.js'
-import * as ProjectApi from '@/api/ProjectApi.js'
+import { mapGetters } from 'vuex'
 import OrderDetail from '../components/OrderDetail.vue'
 import OrderPrint from '../components/OrderPrint.vue'
 import * as DateUtil from '@/core/utils/DateUtil'
@@ -241,7 +242,6 @@ export default {
   components: { OrderDetail, OrderPrint },
   data () {
     return {
-      projectList: [],
       orderDetailVisible: false,
       printVisible: false,
       // ---查询条件
@@ -299,6 +299,9 @@ export default {
       stateMap: ['完成', '待确认', '待对方确认', '撤销', '待撤销', '待对方确认撤销']
     }
   },
+  computed: {
+    ...mapGetters('project', ['projectList'])
+  },
   watch: {
     page () {
       this.$refs.table.bodyWrapper.scrollTo({
@@ -309,13 +312,15 @@ export default {
     }
   },
   created () {
-    this.getProjectList()
     this.handleSearch()
   },
   methods: {
-    getProjectList () {
-      ProjectApi.list().then(res => {
-        this.projectList = res.data
+    print (row) {
+      this.temp = { ...row }
+      this.printVisible = true
+      this.$nextTick(() => {
+        window.print()
+        this.printVisible = false
       })
     },
     findProjectName (id) {

@@ -189,7 +189,7 @@
 
 <script>
 import * as StatementApi from '@/api/StatementApi.js'
-import * as ProjectApi from '@/api/ProjectApi.js'
+import { mapGetters } from 'vuex'
 import StatementDetail from './components/StatementDetail.vue'
 
 export default {
@@ -204,7 +204,6 @@ export default {
         total: 0,
         size: 50
       },
-      projectList: [],
       detailId: null,
       queryParam: {
         state: [0, 1, 2, 4, 5]
@@ -245,6 +244,9 @@ export default {
       ]
     }
   },
+  computed: {
+    ...mapGetters('project', ['projectList'])
+  },
   watch: {
     page () {
       this.$refs.table.bodyWrapper.scrollTo({
@@ -255,15 +257,9 @@ export default {
     }
   },
   created () {
-    this.getProjectList()
     this.handleSearch()
   },
   methods: {
-    getProjectList () {
-      ProjectApi.list().then(res => {
-        this.projectList = res.data
-      })
-    },
     findProjectName (id) {
       return this.projectList.find(project => project.id === id)?.name
     },

@@ -3,20 +3,6 @@
     v-if="value"
     class="orderP-print"
   >
-    <div class="button">
-      <el-button
-        v-if="!printState"
-        @click="print"
-      >
-        打印
-      </el-button>
-      <el-button
-        v-if="!printState"
-        @click="$emit('input',false)"
-      >
-        关闭
-      </el-button>
-    </div>
     <div class="page">
       <div class="title">
         {{ compName }}
@@ -101,13 +87,6 @@ export default {
     this.materialList = baseData.materialList
   },
   methods: {
-    print () {
-      this.printState = true
-      this.$nextTick(() => {
-        window.print()
-        this.printState = false
-      })
-    }
   }
 }
 </script>

@@ -2,7 +2,7 @@
   <div class="login">
     <div class="login-background">
       <div class="login-title">
-        钢管租赁系统
+        租赁互联
       </div>
     </div>
     <div class="login-side">

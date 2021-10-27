@@ -40,8 +40,9 @@ export function del (id) {
     console.error('参数错误')
   }
   return request({
-    url: '/customer/remove/' + id,
-    method: 'delete'
+    url: '/customer/remove',
+    method: 'delete',
+    params: { id }
   })
 }
 

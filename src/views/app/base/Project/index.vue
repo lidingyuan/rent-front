@@ -72,7 +72,7 @@
           <el-button
             type="danger"
             size="mini"
-            @click="handleDelete(scope.row.id)"
+            @click="handleDelete(scope.row)"
           >
             删除
           </el-button>
@@ -163,6 +163,7 @@
 import * as ProjectApi from '@/api/ProjectApi.js'
 import * as CustomerApi from '@/api/CustomerApi.js'
 import ProjectPrice from './components/ProjectPrice.vue'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Project',
@@ -224,6 +225,7 @@ export default {
     this.handleSearch()
   },
   methods: {
+    ...mapActions('project', ['updateProjectList']),
     getCustomerList () {
       CustomerApi.list().then(res => {
         this.customerList = res.data
@@ -257,6 +259,7 @@ export default {
           ProjectApi.save(this.temp).then(res => {
             this.handleSearch()
             this.dialogFormVisible = false
+            this.updateProjectList()
             this.$message({
               message: '添加成功',
               type: 'success',
@@ -268,7 +271,14 @@ export default {
     },
     // ---修改
     handleUpdate (row) {
-      this.temp = Object.assign({}, row)
+      if (!row.priceList) {
+        ProjectApi.projectPriceList({ projectId: row.id }).then(res => {
+          row.priceList = res.data
+          this.temp = Object.assign({}, row)
+        })
+      } else {
+        this.temp = Object.assign({}, row)
+      }
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -282,6 +292,7 @@ export default {
           ProjectApi.update(tempData).then(() => {
             this.handleSearch()
             this.dialogFormVisible = false
+            this.updateProjectList()
             this.$message({
               message: '更新成功',
               type: 'success',
@@ -299,6 +310,7 @@ export default {
         type: 'warning'
       }).then(() => {
         ProjectApi.del(row.id).then(res => {
+          this.updateProjectList()
           this.$message({
             message: '删除成功',
             type: 'success',
