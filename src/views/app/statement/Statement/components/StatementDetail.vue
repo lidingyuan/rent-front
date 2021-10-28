@@ -15,20 +15,34 @@
         v-for="(material,index) in statementDetail.detailMaterialLast"
         :key="index"
       >
-        {{ material.materialTypeId | filterType }}
         {{ material.date }}
+        {{ material.materialTypeId | filterType }}
         {{ material | filterNum }}
+        {{ material.money }}
       </div>
     </div>
     <div>
       本次结算：
       <div
-        v-for="(material,index) in statementDetail.detailMaterial"
+        v-for="(material,index) in detailMaterial"
         :key="index"
       >
-        {{ material.materialTypeId | filterType }}
         {{ material.date }}
+        {{ material.materialTypeId | filterType }}
         {{ material | filterNum }}
+        {{ material.money }}
+      </div>
+    </div>
+    <div>
+      本次结余：
+      <div
+        v-for="(material,index) in detailMaterialCount"
+        :key="index"
+      >
+        {{ material.date }}
+        {{ material.materialTypeId | filterType }}
+        {{ material | filterNum }}
+        {{ material.money }}
       </div>
     </div>
   </el-dialog>
@@ -59,18 +73,34 @@ export default {
     }
   },
   props: {
-    id: Number
+    id: Number,
+    visible: Boolean
   },
   data () {
     return {
       materialTypeList: [],
+      detailMaterialLast: [],
       statementDetail: {},
-      statementDetailVisible: false
+      statementDetailVisible: false,
+      materialTypeMap: {}
+    }
+  },
+  computed: {
+    detailMaterial () {
+      return this.statementDetail.detailMaterial?.filter(item => item.type !== 3)
+    },
+    detailMaterialCount () {
+      return this.statementDetail.detailMaterial?.filter(item => item.type === 3)
     }
   },
   watch: {
+    visible (val) {
+      this.statementDetailVisible = val
+    },
+    statementDetailVisible (val) {
+      this.$emit('update:visible', val)
+    },
     id () {
-      this.statementDetailVisible = true
       StatementApi.detail(this.id).then(res => {
         this.statementDetail = res.data
       })
@@ -79,7 +109,6 @@ export default {
   created () {
   },
   methods: {
-
   }
 }
 </script>

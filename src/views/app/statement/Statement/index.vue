@@ -183,7 +183,10 @@
         </el-button>
       </div>
     </el-dialog>
-    <StatementDetail :id="detailId" />
+    <StatementDetail
+      :id="detailId"
+      :visible.sync="detailVisible"
+    />
   </ZlQueryContainer>
 </template>
 
@@ -204,6 +207,7 @@ export default {
         total: 0,
         size: 50
       },
+      detailVisible: false,
       detailId: null,
       queryParam: {
         state: [0, 1, 2, 4, 5]
