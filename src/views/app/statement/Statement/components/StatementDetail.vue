@@ -5,20 +5,34 @@
     fullscreen
     @update:visible="val=>this.$emit('update:visible', val)"
   >
-    <el-form>
-      <el-form-item>结算日期：{{ statementDetail.date }}</el-form-item>
-      <el-form-item>上次结算日期：{{ statementDetail.lastDate }}</el-form-item>
-    </el-form>
+    <div>结算日期：{{ statementDetail.date }}</div>
+    <div>上次结算日期：{{ statementDetail.lastDate }}</div>
     <div>
       上次结余：
       <div
         v-for="(material,index) in statementDetail.detailMaterialLast"
         :key="index"
+        class="row"
       >
-        {{ material.date }}
-        {{ material.materialTypeId | filterType }}
-        {{ material | filterNum }}
-        {{ material.money }}
+        <div>{{ material.date }}</div>
+        <div>{{ material.materialTypeId | filterType }}</div>
+        <div>{{ material | filterState }}</div>
+        <div>{{ material.num }}</div>
+        <div>{{ material.money | filterMoney }}</div>
+      </div>
+    </div>
+    <div>
+      结余本期结算：
+      <div
+        v-for="(material,index) in detailMaterialLastStatement"
+        :key="index"
+        class="row"
+      >
+        <div>{{ material.date }}</div>
+        <div>{{ material.materialTypeId | filterType }}</div>
+        <div>{{ material | filterState }}</div>
+        <div>{{ material.num }}</div>
+        <div>{{ material.money | filterMoney }}</div>
       </div>
     </div>
     <div>
@@ -26,11 +40,13 @@
       <div
         v-for="(material,index) in detailMaterial"
         :key="index"
+        class="row"
       >
-        {{ material.date }}
-        {{ material.materialTypeId | filterType }}
-        {{ material | filterNum }}
-        {{ material.money }}
+        <div>{{ material.date }}</div>
+        <div>{{ material.materialTypeId | filterType }}</div>
+        <div>{{ material | filterState }}</div>
+        <div>{{ material.num }}</div>
+        <div>{{ material.money | filterMoney }}</div>
       </div>
     </div>
     <div>
@@ -38,11 +54,13 @@
       <div
         v-for="(material,index) in detailMaterialCount"
         :key="index"
+        class="row"
       >
-        {{ material.date }}
-        {{ material.materialTypeId | filterType }}
-        {{ material | filterNum }}
-        {{ material.money }}
+        <div>{{ material.date }}</div>
+        <div>{{ material.materialTypeId | filterType }}</div>
+        <div>{{ material | filterState }}</div>
+        <div>{{ material.num }}</div>
+        <div>{{ material.money | filterMoney }}</div>
       </div>
     </div>
   </el-dialog>
@@ -54,17 +72,28 @@ import baseData from '@/core/service/baseDataService'
 export default {
   name: 'StatementDetail',
   filters: {
-    filterNum (material) {
+    filterState (material) {
       if (material.type === 3) {
-        return '结余' + material.num
+        return '结余'
       }
 
       if (material.type === 2) {
-        return '归还' + material.num
+        return '归还'
       }
 
       if (material.type === 1) {
-        return '出租' + material.num
+        return '出租'
+      }
+
+      if (material.type === 4) {
+        return '结余'
+      }
+    },
+    filterMoney (money) {
+      if (money > 0) {
+        return '应收' + (-1 * money)
+      } else {
+        return '应收' + (-1 * money)
       }
     },
     filterType (id) {
@@ -87,10 +116,13 @@ export default {
   },
   computed: {
     detailMaterial () {
-      return this.statementDetail.detailMaterial?.filter(item => item.type !== 3)
+      return this.statementDetail.detailMaterial?.filter(item => item.type === 1 || item.type === 2)
     },
     detailMaterialCount () {
       return this.statementDetail.detailMaterial?.filter(item => item.type === 3)
+    },
+    detailMaterialLastStatement () {
+      return this.statementDetail.detailMaterial?.filter(item => item.type === 4)
     }
   },
   watch: {
@@ -114,5 +146,12 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-
+.row{
+  display: flex;
+  width: 100%;
+  >div{
+    width: 0;
+    flex-grow: 1;
+  }
+}
 </style>
