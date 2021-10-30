@@ -185,6 +185,8 @@
     </el-dialog>
     <StatementDetail
       :id="detailId"
+      :project-id="projectId"
+      :find-project-name="findProjectName"
       :visible.sync="detailVisible"
     />
   </ZlQueryContainer>
@@ -209,6 +211,7 @@ export default {
       },
       detailVisible: false,
       detailId: null,
+      projectId: null,
       queryParam: {
         state: [0, 1, 2, 4, 5]
       },
@@ -307,6 +310,7 @@ export default {
     // ---详情
     handleDetail (row) {
       this.detailId = row.id
+      this.projectId = row.projectId
       this.detailVisible = true
     },
     resetTemp () {
@@ -321,6 +325,6 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 
 </style>

@@ -27,6 +27,7 @@
           <div>
             <el-input
               v-model="form[material.code]"
+              :readonly="readonly"
               size="small"
             />
           </div>
@@ -37,7 +38,10 @@
       </div>
     </ScrollBox>
 
-    <el-button @click="save">
+    <el-button
+      v-if="!readonly"
+      @click="save"
+    >
       {{ text }}
     </el-button>
   </el-dialog>
@@ -49,6 +53,7 @@ import baseData from '@/core/service/baseDataService'
 export default {
   name: 'OrderDetail',
   props: {
+    readonly: Boolean,
     visible: Boolean,
     data: Array,
     orderId: [Number, String]

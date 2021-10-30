@@ -125,7 +125,7 @@
           <el-button
             type="primary"
             size="mini"
-            @click="temp = {...scope.row};orderDetailVisible = true"
+            @click="temp = {...scope.row};orderDetailVisible = true;readonly = true"
           >
             详细信息
           </el-button>
@@ -197,7 +197,7 @@
           prop="detail"
           :rules="[{required:true, message:'必须字段'}]"
         >
-          <el-button @click="orderDetailVisible = true">
+          <el-button @click="orderDetailVisible = true;readonly = false">
             详细信息
           </el-button>
         </el-form-item>
@@ -221,9 +221,10 @@
       :visible.sync="orderDetailVisible"
       :order-id="temp.id"
       :data.sync="temp.detail"
+      :readonly="readonly"
     />
     <OrderPrint
-      v-model="printVisible"
+      ref="print"
       :data="temp"
       :find-project-name="findProjectName"
     />
@@ -243,7 +244,6 @@ export default {
   data () {
     return {
       orderDetailVisible: false,
-      printVisible: false,
       // ---查询条件
       page: {
         current: 1,
@@ -284,12 +284,6 @@ export default {
           'show-overflow-tooltip': true
         },
         {
-          field: 'type',
-          title: '类型',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
           field: 'state',
           title: '状态',
           width: 100,
@@ -317,10 +311,8 @@ export default {
   methods: {
     print (row) {
       this.temp = { ...row }
-      this.printVisible = true
       this.$nextTick(() => {
-        window.print()
-        this.printVisible = false
+        this.$refs.print.print()
       })
     },
     findProjectName (id) {
@@ -457,6 +449,6 @@ export default {
 }
 </script>
 
-<style lang="scss" scope>
+<style lang="scss" scoped>
 
 </style>

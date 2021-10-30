@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="value"
-    class="orderP-print"
-  >
+  <PrintPage ref="print">
     <div class="page">
       <div class="title">
         {{ compName }}
@@ -46,16 +43,17 @@
         <div>收货人：<div class="sign" /></div>
       </div>
     </div>
-  </div>
+  </PrintPage>
 </template>
 
 <script>
 import baseData from '@/core/service/baseDataService'
+import PrintPage from '@/core/components/PrintPage'
 import { mapGetters } from 'vuex'
 export default {
   name: 'OrderPrint',
+  components: { PrintPage },
   props: {
-    value: Boolean,
     data: Object,
     findProjectName: Function
   },
@@ -87,86 +85,76 @@ export default {
     this.materialList = baseData.materialList
   },
   methods: {
+    print () {
+      this.$refs.print.print()
+    }
   }
 }
 </script>
 
 <style lang='scss' scoped>
-.orderP-print{
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 141vw;
-  background: #fff;
-  z-index: 10000;
-  .page{
-    width: 100%;
-    height: 100%;
+.page{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.title{
+  margin-top: 40px;
+  font-size: 32px;
+  text-align: center;
+}
+.sub-title{
+  font-size: 32px;
+  text-align: center;
+}
+.sub-info{
+  margin: 0 40px;
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+}
+.foot-sign{
+  margin: 0 40px;
+  margin-top: 20px;
+  margin-bottom: 80px;
+  display: flex;
+  justify-content: space-between;
+  .sign{
+    width: 200px;
+  }
+}
+.table{
+  .head{
     display: flex;
-    flex-direction: column;
-  }
-  .title{
-    margin-top: 40px;
-    font-size: 32px;
-    text-align: center;
-  }
-  .sub-title{
-    font-size: 32px;
-    text-align: center;
-  }
-  .sub-info{
-    margin: 0 40px;
-    margin-top: 40px;
-    display: flex;
-    justify-content: space-between;
-  }
-  .foot-sign{
-    margin: 0 40px;
-    margin-top: 20px;
-    margin-bottom: 80px;
-    display: flex;
-    justify-content: space-between;
-    .sign{
-      width: 200px;
-    }
-  }
-  .table{
-    height: 0;
-    flex-grow: 1;
-    .head{
+    justify-content: center;
+    >div{
       display: flex;
-      justify-content: center;
       >div{
         display: flex;
-        min-width: 30%;
-        >div{
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 1.5em;
-          width: 100px;
-          flex-shrink: 0;
-          border: 1px solid #ccc;
-        }
+        justify-content: center;
+        align-items: center;
+        height: 1.5em;
+        width: 100px;
+        flex-shrink: 0;
+        border: 1px solid #ccc;
       }
     }
-    .body{
+  }
+  .body{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    >div{
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
       >div{
         display: flex;
-        min-width: 30%;
-        >div{
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 1.5em;
-          width: 100px;
-          flex-shrink: 0;
-          border: 1px solid #ccc;
-        }
+        justify-content: center;
+        align-items: center;
+        height: 1.5em;
+        width: 100px;
+        flex-shrink: 0;
+        border: 1px solid #ccc;
       }
     }
   }
