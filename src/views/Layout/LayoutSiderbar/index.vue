@@ -111,3 +111,57 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.layout-siderbar{
+  height: 100%;
+  width: 52px;
+  display: flex;
+  flex-direction: column;
+  &.active{
+    width: 240px;
+  }
+  .item-list{
+    height: 0;
+    flex-grow: 1;
+    overflow-x: hidden;
+    .layout-item{
+      box-sizing: border-box;
+      width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      border-left: transparent 4px solid;
+      .layout-name{
+        width: 0;
+        flex-grow: 1;
+      }
+      .item-expand{
+        transform: rotateZ(-90deg);
+        &.flip{
+          transform: rotateZ(0deg);
+        }
+      }
+    }
+  }
+  .siderbar-switch{
+    cursor: pointer;
+    height: 52px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .flip{
+      transform: rotateY(180deg);
+    }
+  }
+  .icon{
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    margin: 0 1em;
+  }
+}
+</style>

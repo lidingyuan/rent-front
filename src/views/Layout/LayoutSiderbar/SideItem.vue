@@ -81,3 +81,35 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.layout-child-item{
+  width: 240px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  .icon{
+    width: 1em;
+    height: 1em;
+    margin: 0 1em;
+  }
+  .layout-name{
+    width: 0;
+    flex-grow: 1;
+  }
+  .layout-child-name{
+    width: 0;
+    height: 100%;
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+  }
+  .item-expand{
+    transform: rotateZ(-90deg);
+    &.flip{
+      transform: rotateZ(0deg);
+    }
+  }
+}
+</style>

@@ -73,9 +73,8 @@
       class="head-user"
       @click.stop="subMenuVisible = !subMenuVisible"
     >
-      <div class="user-img" />
       <div class="user-name">
-        Nicholas
+        {{ userName }}
       </div>
       <div class="user-expand" />
       <div
@@ -86,14 +85,11 @@
       >
         <div class="head-sub-menu">
           <div class="user-info">
-            <div class="user-img" />
             <div>
               <div class="user-name">
-                Nicholas
+                {{ userName }}
               </div>
-              <div class="user-motto">
-                编辑您的个人座右铭…
-              </div>
+              <div class="user-motto" />
             </div>
           </div>
           <div class="user-theme">
@@ -123,7 +119,7 @@
               <div class="change-info" />
               完善信息
             </div>
-            <div @click="dialogVisible = true;subMenuVisible = false">
+            <div>
               <div class="change-password" />
               修改密码
             </div>
@@ -135,47 +131,12 @@
         </div>
       </div>
     </div>
-    <el-dialog
-      title="修改密码"
-      :visible.sync="dialogVisible"
-    >
-      <el-form
-        label-position="left"
-        label-width="100px"
-      >
-        <el-form-item label="旧密码">
-          <el-input
-            v-model="passwordForm.oldpassword"
-            type="password"
-          />
-        </el-form-item>
-        <el-form-item label="新密码">
-          <el-input
-            v-model="passwordForm.newpassword"
-            type="password"
-          />
-        </el-form-item>
-        <el-form-item label="确认新密码">
-          <el-input
-            v-model="passwordForm.checkpassword"
-            type="password"
-          />
-        </el-form-item>
-        <el-button
-          @click="changePassword"
-        >
-          更改密码
-        </el-button>
-      </el-form>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import { constantRoutes } from '@/core/router'
 import { mapGetters, mapActions } from 'vuex'
-import MD5 from 'crypto-js/md5'
-import { changePassword } from '@/api/system/user'
 
 export default {
   name: 'LayoutHeader',
@@ -191,17 +152,12 @@ export default {
       constantRoutes: constantRoutes.filter(item => item.isApp),
       subMenuVisible: false,
       showMoreItems: false,
-      visibleSize: 1,
-      dialogVisible: false,
-      passwordForm: {
-        oldpassword: '',
-        newpassword: '',
-        checkpassword: ''
-      }
+      visibleSize: 0
     }
   },
   computed: {
     ...mapGetters('router', ['appList']),
+    ...mapGetters('user', { userName: 'name' }),
     filterAppList () {
       return this.appList.filter(item => !item.meta.hideAppMenu)
     }
@@ -259,22 +215,205 @@ export default {
     clear () {
       this.subMenuVisible = false
       this.showMoreItems = false
-    },
-    changePassword () {
-      if (this.passwordForm.checkpassword !== this.passwordForm.newpassword) {
-        return this.$message('新密码与确认新密码不同！')
-      }
-      if (this.passwordForm.oldpassword === this.passwordForm.newpassword) {
-        return this.$message('新密码与旧密码相同！')
-      }
-      changePassword({
-        oldpassword: MD5(this.passwordForm.oldpassword).toString(),
-        newpassword: MD5(this.passwordForm.newpassword).toString()
-      }).then(res => {
-        this.dialogVisible = false
-        this.$message('修改成功')
-      })
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+.layout-header{
+  width: 100%;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  .head-menu{
+    position: relative;
+    width: 0;
+    height: 100%;
+    flex-grow: 1;
+    flex-shrink: 0;
+    margin: 0 24px;
+    display: flex;
+    align-items: center;
+    .menu-item{
+      flex-shrink: 0;
+      height: 100%;
+      font-size: 16px;
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+    .divider{
+      flex-shrink: 0;
+      width: 1px;
+      height: 36px;
+      background: linear-gradient(rgba(255,255,255,0),rgba(255,255,255,1),rgba(255,255,255,0));
+    }
+    .more-items-transition{
+      position: absolute;
+      z-index: 1;
+      top: 100%;
+      right: 0;
+      width: 336px;
+      border-radius: 0 0 8px 8px;
+      background: #fff;
+      box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+      .more-items{
+        width: 336px;
+        .menu-item{
+          height: 56px;
+          display: inline-flex;
+          margin: 10px;
+        }
+      }
+    }
+  }
+  .head-search{
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin: 18px;
+    background: url('~@/assets/img/head-search.png') no-repeat center/100%;
+    user-select: none;
+    cursor: pointer;
+  }
+  .head-news{
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    margin: 18px;
+    background: url('~@/assets/img/head-news.png') no-repeat center/100%;
+    user-select: none;
+    cursor: pointer;
+  }
+  .head-user{
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 12px 20px;
+    user-select: none;
+    .user-img{
+      width: 32px;
+      height: 32px;
+      border-radius: 16px;
+      background-color: #ccc;
+      cursor: pointer;
+    }
+    .user-name{
+      font-size: 16px;
+      color: #FFF;
+      padding: 0 8px;
+      cursor: pointer;
+    }
+    .user-expand{
+      width: 14px;
+      height: 14px;
+      background: url('~@/assets/img/expand.png') no-repeat center/100%;
+      cursor: pointer;
+    }
+    .head-sub-menu-transition{
+      position: absolute;
+      z-index: 99999;
+      top: 100%;
+      right: 0;
+      margin-top: 12px;
+      width: 336px;
+      height: 300px;
+      border-radius: 0 0 8px 8px;
+      background: #fff;
+      box-shadow: 0 2px 12px 0 rgb(0 0 0 / 10%);
+    }
+    .head-sub-menu{
+      width: 336px;
+      height: 300px;
+      background: url('~@/assets/img/head/head-sub-menu-background.png') no-repeat top center/100%;
+      .user-info{
+        height: 96px;
+        padding: 0 24px;
+        display: flex;
+        align-items: center;
+        .user-img{
+          width: 48px;
+          height: 48px;
+          border-radius: 24px;
+          background-color: #ccc;
+        }
+        .user-name{
+          font-size: 18px;
+          color: #333;
+        }
+        .user-motto{
+          font-size: 12px;
+          padding: 0 8px;
+          color: #999;
+        }
+      }
+      .user-theme{
+        height: 64px;
+        margin: 0 24px;
+        border-bottom: 1px solid #ccc;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        >div{
+          cursor: pointer;
+          width: 32px;
+          height: 32px;
+          border-radius: 4px;
+        }
+      }
+      .user-operation{
+        height: 132px;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        >div{
+          cursor: pointer;
+          width: 96px;
+          height: 92px;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          &:hover{
+            background: #f3f3f3;
+          }
+        }
+        .change-info{
+          width: 30px;
+          height: 30px;
+          background: url('~@/assets/img/head/change-info.png') no-repeat center;
+          padding-bottom: 10px;
+        }
+        .change-password{
+          width: 30px;
+          height: 30px;
+          background: url('~@/assets/img/head/change-password.png') no-repeat center;
+          padding-bottom: 10px;
+        }
+        .logout{
+          width: 30px;
+          height: 30px;
+          background: url('~@/assets/img/head/logout.png') no-repeat center;
+          padding-bottom: 10px;
+        }
+      }
+    }
+  }
+  .app-menu{
+    width:80px;
+    height:100px;
+    font-size: 12px;
+    transform-origin: top;
+  }
+  .app-menu-item{
+    padding: 0 10px;
+    line-height: 2em;
+    user-select: none;
+    cursor: pointer;
+    &:hover{
+      background: #ccc;
+    }
+  }
+}
+</style>
