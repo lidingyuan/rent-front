@@ -234,7 +234,7 @@
 <script>
 import * as OrderApi from '@/api/OrderApi.js'
 import { mapGetters } from 'vuex'
-import OrderDetail from '../components/OrderDetail.vue'
+import OrderDetail from '../components/OrderDetailV2.vue'
 import OrderPrint from '../components/OrderPrint.vue'
 import * as DateUtil from '@/core/utils/DateUtil'
 

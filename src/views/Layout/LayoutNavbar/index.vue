@@ -120,3 +120,31 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.layout-navbar{
+  height: 40px;
+  background: #FFFFFF;
+  padding: 0 12px;
+  display: flex;
+  align-items: center;
+  .page{
+    height: 100%;
+    margin: 0 16px;
+  }
+  .navbar-menu{
+    width:80px;
+    height:100px;
+    font-size: 12px;
+  }
+  .menu-item{
+    padding: 0 10px;
+    line-height: 2em;
+    user-select: none;
+    cursor: pointer;
+    &:hover{
+      background: #ccc;
+    }
+  }
+}
+</style>
