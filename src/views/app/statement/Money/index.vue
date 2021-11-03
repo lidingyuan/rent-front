@@ -79,7 +79,20 @@
         :width="column.width"
         :sortable="column.sortable"
         :show-overflow-tooltip="column['show-overflow-tooltip']"
-      />
+      >
+        <template
+          v-if="column.field === 'projectId'"
+          #default="{row}"
+        >
+          {{ findProjectName(row.projectId) }}
+        </template>
+        <template
+          v-else-if="column.field === 'state'"
+          #default="{row}"
+        >
+          {{ stateMap[row.state] }}
+        </template>
+      </el-table-column>
       <el-table-column
         prop="remarks"
         width="200"
@@ -190,7 +203,18 @@
           prop="type"
           :rules="[{required:true, message:'必须字段'}]"
         >
-          <el-input v-model="temp.type" />
+          <el-radio
+            v-model="temp.type"
+            :label="1"
+          >
+            支出
+          </el-radio>
+          <el-radio
+            v-model="temp.type"
+            :label="2"
+          >
+            收入
+          </el-radio>
         </el-form-item>
         <el-form-item
           label="金额"
@@ -244,10 +268,7 @@ export default {
         date: '',
         type: '',
         userCompId: '',
-        money: '',
-        state: '',
-        connectId: '',
-        statemented: ''
+        money: ''
       },
       columns: [
         {
@@ -257,7 +278,7 @@ export default {
         },
         {
           field: 'projectId',
-          title: '项目id',
+          title: '项目',
           width: 100,
           'show-overflow-tooltip': true
         },
@@ -274,12 +295,6 @@ export default {
           'show-overflow-tooltip': true
         },
         {
-          field: 'userCompId',
-          title: '用户公司id',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
           field: 'money',
           title: '金额',
           width: 100,
@@ -288,18 +303,6 @@ export default {
         {
           field: 'state',
           title: '状态',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'connectId',
-          title: '关联转账id',
-          width: 100,
-          'show-overflow-tooltip': true
-        },
-        {
-          field: 'statemented',
-          title: '是否已结算',
           width: 100,
           'show-overflow-tooltip': true
         }
@@ -323,6 +326,9 @@ export default {
     this.handleSearch()
   },
   methods: {
+    findProjectName (id) {
+      return this.projectList.find(project => project.id === id)?.name
+    },
     // ---查询
     handleSearch () {
       this.page.current = 1
@@ -409,10 +415,7 @@ export default {
         date: '',
         type: '',
         userCompId: '',
-        money: '',
-        state: '',
-        connectId: '',
-        statemented: ''
+        money: ''
       }
     }
     // ---其它

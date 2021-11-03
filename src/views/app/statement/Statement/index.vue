@@ -232,7 +232,7 @@ export default {
         },
         {
           field: 'projectId',
-          title: '项目id',
+          title: '项目',
           width: 100,
           'show-overflow-tooltip': true
         },
