@@ -93,5 +93,14 @@
     "icon": "BudgetManagement",
     "id": "30001",
     "component":"Statement"
+  },
+  {
+    "name": "收支管理",
+    "pid": "30000",
+    "idPath": "30000,30002",
+    "url": "/statement/money",
+    "icon": "BudgetManagement",
+    "id": "30002",
+    "component":"Money"
   }
 ]

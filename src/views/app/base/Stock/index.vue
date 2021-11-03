@@ -55,7 +55,7 @@ export default {
     StockApi.list().then(res => {
       this.form = {}
       res.data.forEach(item => {
-        this.form[item.materialCode] = item.num
+        this.$set(this.form, item.materialCode, item.num)
       })
     })
     MaterialApi.list().then(res => {
