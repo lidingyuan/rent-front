@@ -104,13 +104,14 @@ export default {
     dataTypeList () {
       const typeMap = {}
       this.dataList.forEach(item => {
-        const m = this.materialList.find(m => m.code === item.materialCode)
+        const m = baseData.materialList.find(m => m.code === item.materialCode)
         if (!m) {
           return
         }
         if (!typeMap[m.typeId]) {
           typeMap[m.typeId] = {
-            name: this.typeMap[m.typeId],
+            name: this.typeMap[m.typeId].materialTypeName,
+            unit: this.typeMap[m.typeId].unit,
             num: 0
           }
         }
@@ -123,10 +124,11 @@ export default {
     visible () {
       this.orderDetailVisible = this.visible
     },
+    dataList () {
+      this.materialList = baseData.materialList
+    },
     orderDetailVisible (val) {
       this.$emit('update:visible', val)
-    },
-    data () {
     },
     orderId () {
       if (this.orderId) {
@@ -143,7 +145,7 @@ export default {
   created () {
     const typeMap = {}
     baseData.materialTypeList.forEach(item => {
-      typeMap[item.id] = item.materialTypeName
+      typeMap[item.id] = item
     })
     this.typeMap = typeMap
     this.materialList = baseData.materialList
@@ -155,6 +157,10 @@ export default {
       this.$emit('update:visible', false)
     },
     filterMethod (key) {
+      if (!key) {
+        this.materialList = baseData.materialList
+        return
+      }
       this.materialList = baseData.materialList.filter(item => item.key.includes(key))
     },
     change (code) {
