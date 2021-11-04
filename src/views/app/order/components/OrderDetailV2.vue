@@ -1,14 +1,13 @@
 <template>
   <el-dialog
     :visible.sync="orderDetailVisible"
-    fullscreen
     @update:visible="val=>this.$emit('update:visible', val)"
   >
     <div style="display:flex;">
       <el-table
         size="mini"
         :data="dataList"
-        height="calc(100vh - 100px)"
+        height="60vh"
         border
         stripe
       >
@@ -52,11 +51,15 @@
             />
           </template>
         </el-table-column>
+        <el-table-column
+          prop="unit"
+          label="单位"
+        />
       </el-table>
       <el-table
         size="mini"
         :data="dataTypeList"
-        height="calc(100vh - 100px)"
+        height="60vh"
         border
         stripe
       >
@@ -67,6 +70,10 @@
         <el-table-column
           prop="num"
           label="数量"
+        />
+        <el-table-column
+          prop="unit"
+          label="单位"
         />
       </el-table>
     </div>
