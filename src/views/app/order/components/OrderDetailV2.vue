@@ -77,6 +77,12 @@
         />
       </el-table>
     </div>
+
+    <el-button
+      @click="save"
+    >
+      保存
+    </el-button>
   </el-dialog>
 </template>
 
@@ -133,11 +139,7 @@ export default {
     orderId () {
       if (this.orderId) {
         OrderApi.detailList({ orderId: this.orderId }).then(res => {
-          const from = {}
-          res.data.forEach(item => {
-            from[item.materialCode] = item.num
-          })
-          this.form = from
+          this.dataList = res.data
         })
       }
     }

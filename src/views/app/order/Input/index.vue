@@ -243,6 +243,7 @@ export default {
   components: { OrderDetail, OrderPrint },
   data () {
     return {
+      readonly: false,
       orderDetailVisible: false,
       // ---查询条件
       page: {
