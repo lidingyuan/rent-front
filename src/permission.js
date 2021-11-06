@@ -20,7 +20,10 @@ router.beforeEach((to, from, next) => {
     } else {
       if (!store.getters['user/name']) {
         store.dispatch('user/GetInfo').then(res => {
-          store.dispatch('router/GenerateRoutes', routes).then(() => {
+          const authority = res.data?.authority
+          const filterRoutes = routes.filter(item => authority.includes(item.id))
+          console.log(routes, authority)
+          store.dispatch('router/GenerateRoutes', filterRoutes).then(() => {
             router.addRoutes(store.getters['router/addRoutes'])
             initData().then(() => {
               next({ ...to, replace: true })

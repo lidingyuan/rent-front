@@ -137,3 +137,16 @@ export function withdraw (options) {
     data: options
   })
 }
+
+/**
+ * 修改
+ * @param {Object} options
+ *        {Integer} projectId 必须：项目id
+ */
+export function projectCount (queryParam) {
+  return request({
+    url: '/order/projectCount',
+    method: 'get',
+    params: queryParam
+  })
+}

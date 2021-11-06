@@ -78,6 +78,15 @@
     "component":"Input"
   },
   {
+    "name": "项目总览",
+    "pid": "20000",
+    "idPath": "20000,20003",
+    "url": "/order/ProjectCount",
+    "icon": "BudgetManagement",
+    "id": "20003",
+    "component":"ProjectCount"
+  },
+  {
     "name": "结算管理",
     "idPath": "30000",
     "url": "/statement",
