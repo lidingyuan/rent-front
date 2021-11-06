@@ -310,10 +310,17 @@ export default {
     this.handleSearch()
   },
   methods: {
+    checkDetail (row) {
+      return OrderApi.detailList({ orderId: row.id }).then(res => {
+        row.detail = res.data
+      })
+    },
     print (row) {
-      this.temp = { ...row }
-      this.$nextTick(() => {
-        this.$refs.print.print()
+      this.checkDetail(row).then(() => {
+        this.temp = { ...row }
+        this.$nextTick(() => {
+          this.$refs.print.print()
+        })
       })
     },
     findProjectName (id) {

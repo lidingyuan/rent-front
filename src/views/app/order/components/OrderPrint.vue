@@ -26,11 +26,11 @@
         </div>
         <div class="body">
           <div
-            v-for="material in materialList"
-            :key="material.code"
+            v-for="material in dataList"
+            :key="material.materialCode"
           >
             <div>{{ material.name }}</div>
-            <div>{{ form[material.code] }}</div>
+            <div>{{ material.num }}</div>
             <div style="width:32px;">
               {{ material.unit }}
             </div>
@@ -61,7 +61,7 @@ export default {
     return {
       printState: false,
       materialList: [],
-      form: {}
+      dataList: []
     }
   },
   computed: {
@@ -72,12 +72,21 @@ export default {
   },
   watch: {
     data () {
-      if (this.data.detail) {
+      console.log(this.data)
+      if (this.data) {
         this.text = '修改'
-        this.form = { ...this.data.detail }
+        this.dataList = this.data.detail.map(item => {
+          const material = this.materialList.find(material => material.code === item.materialCode) || {}
+          return {
+            ...item,
+            name: material.name,
+            unit: material.unit
+          }
+        })
+        console.log(this.dataList)
       } else {
         this.text = '保存'
-        this.form = {}
+        this.dataList = []
       }
     }
   },

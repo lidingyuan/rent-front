@@ -7,7 +7,6 @@
       ref="table"
       size="mini"
       :data="dataList"
-      height="100%"
       border
       stripe
     >

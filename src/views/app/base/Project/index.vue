@@ -55,7 +55,14 @@
         :width="column.width"
         :sortable="column.sortable"
         :show-overflow-tooltip="column['show-overflow-tooltip']"
-      />
+      >
+        <template
+          v-if="column.field === 'customerId'"
+          #default="{row}"
+        >
+          {{ findCustomerName(row.customerId) }}
+        </template>
+      </el-table-column>
       <el-table-column
         width="300"
         label="操作"
@@ -204,7 +211,7 @@ export default {
         },
         {
           field: 'customerId',
-          title: '客户id',
+          title: '客户',
           width: 100,
           'show-overflow-tooltip': true
         }
@@ -226,6 +233,10 @@ export default {
   },
   methods: {
     ...mapActions('project', ['updateProjectList']),
+    findCustomerName (id) {
+      const customer = this.customerList.find(c => c.id === id)
+      return customer.name
+    },
     getCustomerList () {
       CustomerApi.list().then(res => {
         this.customerList = res.data
