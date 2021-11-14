@@ -442,7 +442,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        OrderApi.withdraw({ id: row.id }).then(res => {
+        OrderApi.withdraw({ id: row.id, type: this.queryParam.type }).then(res => {
           this.$message({
             message: '入库单状态已改变',
             type: 'success',
