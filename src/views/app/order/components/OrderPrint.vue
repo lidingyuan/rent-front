@@ -72,7 +72,7 @@ export default {
   },
   watch: {
     data () {
-      if (this.data) {
+      if (this.data?.detail) {
         this.text = '修改'
         this.dataList = this.data.detail.map(item => {
           const material = this.materialList.find(material => material.code === item.materialCode) || {}
