@@ -125,7 +125,7 @@
           <el-button
             type="primary"
             size="mini"
-            @click="temp = {...scope.row};orderDetailVisible = true;readonly = true"
+            @click="temp = {...scope.row};orderDetailV2Visible = true;readonly = true"
           >
             详细信息
           </el-button>
@@ -197,8 +197,11 @@
           prop="detail"
           :rules="[{required:true, message:'必须字段'}]"
         >
-          <el-button @click="orderDetailVisible = true;readonly = false">
+          <el-button @click="orderDetailV2Visible = true;readonly = false">
             详细信息
+          </el-button>
+          <el-button @click="orderDetailVisible = true;readonly = false">
+            详细信息（全展示）
           </el-button>
         </el-form-item>
       </el-form>
@@ -223,6 +226,12 @@
       :data.sync="temp.detail"
       :readonly="readonly"
     />
+    <OrderDetailV2
+      :visible.sync="orderDetailV2Visible"
+      :order-id="temp.id"
+      :data.sync="temp.detail"
+      :readonly="readonly"
+    />
     <OrderPrint
       ref="print"
       :data="temp"
@@ -234,17 +243,19 @@
 <script>
 import * as OrderApi from '@/api/OrderApi.js'
 import { mapGetters } from 'vuex'
-import OrderDetail from '../components/OrderDetailV2.vue'
+import OrderDetail from '../components/OrderDetail.vue'
+import OrderDetailV2 from '../components/OrderDetailV2.vue'
 import OrderPrint from '../components/OrderPrint.vue'
 import * as DateUtil from '@/core/utils/DateUtil'
 
 export default {
   name: 'Input',
-  components: { OrderDetail, OrderPrint },
+  components: { OrderDetail, OrderDetailV2, OrderPrint },
   data () {
     return {
       readonly: false,
       orderDetailVisible: false,
+      orderDetailV2Visible: false,
       // ---查询条件
       page: {
         current: 1,

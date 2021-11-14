@@ -50,6 +50,7 @@
             <el-input-number
               v-model="row.num"
               :controls="false"
+              :disabled="readonly"
             />
           </template>
         </el-table-column>
@@ -88,6 +89,7 @@
     </div>
 
     <el-button
+      v-if="!readonly"
       @click="save"
     >
       保存
@@ -106,6 +108,7 @@ export default {
     }
   },
   props: {
+    readonly: Boolean,
     visible: Boolean,
     data: Array,
     orderId: [Number, String]
@@ -152,10 +155,18 @@ export default {
     orderDetailVisible (val) {
       this.$emit('update:visible', val)
     },
+    data () {
+      if (this.data?.length) {
+        this.dataList = [...this.data, { materialCode: null, num: null }]
+      }
+    },
     orderId () {
       if (this.orderId) {
         OrderApi.detailList({ orderId: this.orderId }).then(res => {
           this.dataList = res.data
+          if (!this.readonly) {
+            this.dataList.push({ materialCode: null, num: null })
+          }
         })
       } else {
         this.dataList = [{ materialCode: null, num: null }]
