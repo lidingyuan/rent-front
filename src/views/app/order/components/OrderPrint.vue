@@ -72,7 +72,6 @@ export default {
   },
   watch: {
     data () {
-      console.log(this.data)
       if (this.data) {
         this.text = '修改'
         this.dataList = this.data.detail.map(item => {

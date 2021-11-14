@@ -3,6 +3,12 @@
     ref="tableWrapper"
     title="列表"
   >
+    <el-button
+      type="primary"
+      @click="save"
+    >
+      保存
+    </el-button>
     <ScrollBox style="height:calc(100vh - 140px);">
       <div class="head">
         <div
@@ -63,6 +69,27 @@ export default {
     })
   },
   methods: {
+    save () {
+      const stock = Object.keys(this.form).map(key => {
+        return {
+          materialCode: key,
+          num: this.form[key]
+        }
+      })
+      StockApi.save({ stock }).then(res => {
+        StockApi.list().then(res => {
+          this.form = {}
+          res.data.forEach(item => {
+            this.$set(this.form, item.materialCode, item.num)
+          })
+        })
+        this.$message({
+          message: '添加成功',
+          type: 'success',
+          duration: 2000
+        })
+      })
+    }
   }
 }
 </script>

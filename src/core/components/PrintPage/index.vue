@@ -1,9 +1,11 @@
 <template>
-  <div
-    v-if="show"
-    class="print-page"
-  >
-    <slot />
+  <div class="print-container">
+    <div
+      ref="slot"
+      class="print-page"
+    >
+      <slot />
+    </div>
   </div>
 </template>
 
@@ -13,23 +15,15 @@ export default {
   props: {
     value: Boolean
   },
-  data () {
-    return {
-      show: false
-    }
-  },
-  created () {
-
-  },
   methods: {
     print () {
-      this.show = true
       this.$nextTick(() => {
         const body = [...document.body.childNodes]
         document.body.innerHTML = ''
-        document.body.appendChild(this.$el)
+        document.body.appendChild(this.$refs.slot)
         window.print()
         document.body.innerHTML = ''
+        this.$el.appendChild(this.$refs.slot)
         body.forEach(child => {
           document.body.appendChild(child)
         })
@@ -40,7 +34,12 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+.print-container{
+  width: 100%;
+}
 .print-page{
-  width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 10px;
 }
 </style>
