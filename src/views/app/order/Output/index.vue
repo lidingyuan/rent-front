@@ -125,7 +125,7 @@
           <el-button
             type="primary"
             size="mini"
-            @click="temp = {...scope.row};orderDetailVisible = true;readonly = true"
+            @click="temp = {...scope.row};orderDetailV2Visible = true;readonly = true"
           >
             详细信息
           </el-button>
@@ -255,6 +255,7 @@ export default {
     return {
       readonly: false,
       orderDetailVisible: false,
+      orderDetailV2Visible: false,
       // ---查询条件
       page: {
         current: 1,
