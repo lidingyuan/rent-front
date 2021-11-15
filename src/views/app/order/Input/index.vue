@@ -233,6 +233,7 @@
       :readonly="readonly"
     />
     <OrderPrint
+      v-if="printVisible"
       ref="print"
       :data="temp"
       :find-project-name="findProjectName"
@@ -256,6 +257,7 @@ export default {
       readonly: false,
       orderDetailVisible: false,
       orderDetailV2Visible: false,
+      printVisible: false,
       // ---查询条件
       page: {
         current: 1,
@@ -327,10 +329,12 @@ export default {
       })
     },
     print (row) {
+      this.printVisible = true
       this.checkDetail(row).then(() => {
         this.temp = { ...row }
         this.$nextTick(() => {
           this.$refs.print.print()
+          this.printVisible = false
         })
       })
     },
