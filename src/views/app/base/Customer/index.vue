@@ -153,6 +153,7 @@ export default {
         size: 50
       },
       queryParam: {
+        state: 1
       },
       dataList: [],
       // ---编辑弹窗

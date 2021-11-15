@@ -106,3 +106,37 @@ export function page (page, queryParam = {}) {
     params: { ...page, ...queryParam }
   })
 }
+
+/**
+ * 修改
+ * @param {Object} options
+ *        {Integer} projectId 必须：项目id
+ *        {LocalDate} date 必须：日期
+ *        {String} type 必须：类型
+ *        {String} detail 必须：详细信息
+ */
+export function completeState (options) {
+  return request({
+    url: '/statement/completeState',
+    method: 'put',
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    data: options
+  })
+}
+
+/**
+ * 修改
+ * @param {Object} options
+ *        {Integer} projectId 必须：项目id
+ *        {LocalDate} date 必须：日期
+ *        {String} type 必须：类型
+ *        {String} detail 必须：详细信息
+ */
+export function withdraw (options) {
+  return request({
+    url: '/statement/withdraw',
+    method: 'put',
+    headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    data: options
+  })
+}

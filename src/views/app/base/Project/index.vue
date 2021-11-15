@@ -186,6 +186,7 @@ export default {
         size: 50
       },
       queryParam: {
+        state: 1
       },
       dataList: [],
       // ---编辑弹窗
@@ -286,7 +287,7 @@ export default {
     // ---修改
     handleUpdate (row) {
       if (!row.priceList) {
-        ProjectApi.projectPriceList({ projectId: row.id }).then(res => {
+        ProjectApi.projectPriceList({ id: row.id }).then(res => {
           row.priceList = res.data
           this.temp = Object.assign({}, row)
         })
@@ -304,6 +305,7 @@ export default {
         if (valid) {
           const tempData = { ...this.temp }
           ProjectApi.update(tempData).then(() => {
+            this.resetTemp()
             this.handleSearch()
             this.dialogFormVisible = false
             this.updateProjectList()

@@ -152,7 +152,7 @@ export default {
       constantRoutes: constantRoutes.filter(item => item.isApp),
       subMenuVisible: false,
       showMoreItems: false,
-      visibleSize: 0
+      visibleSize: 1
     }
   },
   computed: {
@@ -168,7 +168,7 @@ export default {
     },
     visibleSize () {
       this.$nextTick(() => {
-        if (this.$refs['head-menu'].clientWidth !== this.$refs['head-menu'].scrollWidth && this.visibleSize > 0) {
+        if (this.$refs['head-menu'].clientWidth !== this.$refs['head-menu'].scrollWidth && this.visibleSize > 1) {
           this.visibleSize--
         }
         if (this.visibleSize === this.activeAppList.length) {

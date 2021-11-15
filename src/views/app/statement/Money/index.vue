@@ -94,17 +94,27 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="remarks"
-        width="200"
-        label="备注"
-        show-overflow-tooltip
-      />
-      <el-table-column
         width="300"
         label="操作"
         align="center"
       >
         <template slot-scope="scope">
+          <el-button
+            v-if="scope.row.state === 1 || scope.row.state === 4"
+            type="primary"
+            size="mini"
+            @click="handleUpdateState(scope.row)"
+          >
+            单据确认
+          </el-button>
+          <el-button
+            v-if="scope.row.state === 0"
+            type="danger"
+            size="mini"
+            @click="handleWithdraw(scope.row)"
+          >
+            撤销
+          </el-button>
           <el-button
             type="primary"
             size="mini"
@@ -112,36 +122,6 @@
           >
             编辑
           </el-button>
-          <el-button
-            type="danger"
-            size="mini"
-            @click="handleDelete(scope.row.id)"
-          >
-            删除
-          </el-button>
-          <el-dropdown :hide-on-click="true">
-            <el-button
-              size="mini"
-              type="primary"
-            >
-              更多<i class="el-icon-arrow-down el-icon--right" />
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item
-                icon="el-icon-edit"
-                @click.native="handleUpdate(scope.row)"
-              >
-                编辑
-              </el-dropdown-item>
-              <el-dropdown-item
-                icon="el-icon-delete"
-                style="color:#F56C6C;"
-                @click.native="handleDelete(scope.row)"
-              >
-                删除
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -404,6 +384,38 @@ export default {
         MoneyApi.del(row.id).then(res => {
           this.$message({
             message: '删除成功',
+            type: 'success',
+            duration: 2000
+          })
+          this.handleSearch()
+        })
+      })
+    },
+
+    // ---其它
+    handleUpdateState (row) {
+      this.$confirm('确认结算单?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        MoneyApi.completeState({ id: row.id, type: this.queryParam.type }).then(res => {
+          this.$message({
+            message: '结算单状态已改变',
+            type: 'success',
+            duration: 2000
+          })
+          this.handleSearch()
+        })
+      })
+    },
+    handleWithdraw (row) {
+      this.$confirm('撤销结算单?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        MoneyApi.withdraw({ id: row.id, type: this.queryParam.type }).then(res => {
+          this.$message({
+            message: '结算单状态已改变',
             type: 'success',
             duration: 2000
           })

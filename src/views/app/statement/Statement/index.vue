@@ -105,6 +105,22 @@
       >
         <template slot-scope="scope">
           <el-button
+            v-if="scope.row.state === 1 || scope.row.state === 4"
+            type="primary"
+            size="mini"
+            @click="handleUpdateState(scope.row)"
+          >
+            单据确认
+          </el-button>
+          <el-button
+            v-if="scope.row.state === 0"
+            type="danger"
+            size="mini"
+            @click="handleWithdraw(scope.row)"
+          >
+            撤销
+          </el-button>
+          <el-button
             type="primary"
             size="mini"
             @click="handleDetail(scope.row)"
@@ -308,6 +324,38 @@ export default {
             })
           })
         }
+      })
+    },
+
+    // ---其它
+    handleUpdateState (row) {
+      this.$confirm('确认结算单?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        StatementApi.completeState({ id: row.id, type: this.queryParam.type }).then(res => {
+          this.$message({
+            message: '结算单状态已改变',
+            type: 'success',
+            duration: 2000
+          })
+          this.handleSearch()
+        })
+      })
+    },
+    handleWithdraw (row) {
+      this.$confirm('撤销结算单?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消'
+      }).then(() => {
+        StatementApi.withdraw({ id: row.id, type: this.queryParam.type }).then(res => {
+          this.$message({
+            message: '结算单状态已改变',
+            type: 'success',
+            duration: 2000
+          })
+          this.handleSearch()
+        })
       })
     },
     // ---详情
