@@ -164,11 +164,13 @@ export default {
     },
     handleSizeChange (val) {
       this.activePagination.size = val
-      this.$emit('update:pagination', { ...this.activePagination })
+      const { current, size, total } = this.activePagination
+      this.$emit('update:pagination', { current, size, total })
     },
     handleCurrentChange (val) {
       this.activePagination.current = val
-      this.$emit('update:pagination', { ...this.activePagination })
+      const { current, size, total } = this.activePagination
+      this.$emit('update:pagination', { current, size, total })
     },
     filterData () {
       if (!this.searchKey) {
