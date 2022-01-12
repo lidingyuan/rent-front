@@ -1,5 +1,6 @@
 import request from '@/core/utils/request'
 
+const BASE_URL = '/rent'
 /**
  * 新增
  * @param {Object} options
@@ -14,7 +15,7 @@ import request from '@/core/utils/request'
  */
 export function save (options) {
   return request({
-    url: '/money/save',
+    url: BASE_URL + '/money/save',
     method: 'post',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     data: options
@@ -35,7 +36,7 @@ export function save (options) {
  */
 export function update (options) {
   return request({
-    url: '/money/update',
+    url: BASE_URL + '/money/update',
     method: 'put',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     data: options
@@ -52,7 +53,7 @@ export function del (id) {
     console.error('参数错误')
   }
   return request({
-    url: '/money/remove/' + id,
+    url: BASE_URL + '/money/remove/' + id,
     method: 'delete'
   })
 }
@@ -67,7 +68,7 @@ export function detail (id) {
     console.error('参数错误')
   }
   return request({
-    url: '/money/detail/' + id,
+    url: BASE_URL + '/money/detail/' + id,
     method: 'get'
   })
 }
@@ -78,7 +79,7 @@ export function detail (id) {
  */
 export function list (queryParam = {}) {
   return request({
-    url: '/money/list',
+    url: BASE_URL + '/money/list',
     method: 'get',
     params: queryParam
   })
@@ -94,7 +95,7 @@ export function list (queryParam = {}) {
  */
 export function page (page, queryParam = {}) {
   return request({
-    url: '/money/page',
+    url: BASE_URL + '/money/page',
     method: 'get',
     params: { ...page, ...queryParam }
   })
@@ -110,7 +111,7 @@ export function page (page, queryParam = {}) {
  */
 export function completeState (options) {
   return request({
-    url: '/money/completeState',
+    url: BASE_URL + '/money/completeState',
     method: 'put',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     data: options
@@ -127,7 +128,7 @@ export function completeState (options) {
  */
 export function withdraw (options) {
   return request({
-    url: '/money/withdraw',
+    url: BASE_URL + '/money/withdraw',
     method: 'put',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     data: options

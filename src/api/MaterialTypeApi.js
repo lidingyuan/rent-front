@@ -1,5 +1,6 @@
 import request from '@/core/utils/request'
 
+const BASE_URL = '/rent'
 /**
  * 新增
  * @param {Object} options
@@ -9,7 +10,7 @@ import request from '@/core/utils/request'
  */
 export function save (options) {
   return request({
-    url: '/materialType/save',
+    url: BASE_URL + '/materialType/save',
     method: 'post',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     data: options
@@ -25,7 +26,7 @@ export function save (options) {
  */
 export function update (options) {
   return request({
-    url: '/materialType/update',
+    url: BASE_URL + '/materialType/update',
     method: 'put',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     data: options
@@ -42,7 +43,7 @@ export function del (id) {
     console.error('参数错误')
   }
   return request({
-    url: '/materialType/remove/' + id,
+    url: BASE_URL + '/materialType/remove/' + id,
     method: 'delete'
   })
 }
@@ -57,7 +58,7 @@ export function detail (id) {
     console.error('参数错误')
   }
   return request({
-    url: '/materialType/detail/' + id,
+    url: BASE_URL + '/materialType/detail/' + id,
     method: 'get'
   })
 }
@@ -68,7 +69,7 @@ export function detail (id) {
  */
 export function list (queryParam = {}) {
   return request({
-    url: '/materialType/list',
+    url: BASE_URL + '/materialType/list',
     method: 'get',
     params: queryParam
   })
@@ -84,7 +85,7 @@ export function list (queryParam = {}) {
  */
 export function page (page, queryParam = {}) {
   return request({
-    url: '/materialType/page',
+    url: BASE_URL + '/materialType/page',
     method: 'get',
     params: { ...page, ...queryParam }
   })

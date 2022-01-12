@@ -1,5 +1,6 @@
 import request from '@/core/utils/request'
 
+const BASE_URL = '/rent'
 /**
  * 新增
  * @param {Object} options
@@ -11,7 +12,7 @@ import request from '@/core/utils/request'
  */
 export function save (options) {
   return request({
-    url: '/material/save',
+    url: BASE_URL + '/material/save',
     method: 'post',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     data: options
@@ -29,7 +30,7 @@ export function save (options) {
  */
 export function update (options) {
   return request({
-    url: '/material/update',
+    url: BASE_URL + '/material/update',
     method: 'put',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     data: options
@@ -46,7 +47,7 @@ export function del (id) {
     console.error('参数错误')
   }
   return request({
-    url: '/material/remove/' + id,
+    url: BASE_URL + '/material/remove/' + id,
     method: 'delete'
   })
 }
@@ -61,7 +62,7 @@ export function detail (id) {
     console.error('参数错误')
   }
   return request({
-    url: '/material/detail/' + id,
+    url: BASE_URL + '/material/detail/' + id,
     method: 'get'
   })
 }
@@ -72,7 +73,7 @@ export function detail (id) {
  */
 export function list (queryParam = {}) {
   return request({
-    url: '/material/list',
+    url: BASE_URL + '/material/list',
     method: 'get',
     params: queryParam
   })
@@ -88,7 +89,7 @@ export function list (queryParam = {}) {
  */
 export function page (page, queryParam = {}) {
   return request({
-    url: '/material/page',
+    url: BASE_URL + '/material/page',
     method: 'get',
     params: { ...page, ...queryParam }
   })

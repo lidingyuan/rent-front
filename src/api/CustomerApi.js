@@ -1,5 +1,7 @@
 import request from '@/core/utils/request'
 
+const BASE_URL = '/rent'
+
 /**
  * 新增
  * @param {Object} options
@@ -8,7 +10,7 @@ import request from '@/core/utils/request'
  */
 export function save (options) {
   return request({
-    url: '/customer/save',
+    url: BASE_URL + '/customer/save',
     method: 'post',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     data: options
@@ -23,7 +25,7 @@ export function save (options) {
  */
 export function update (options) {
   return request({
-    url: '/customer/update',
+    url: BASE_URL + '/customer/update',
     method: 'put',
     headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     data: options
@@ -40,7 +42,7 @@ export function del (id) {
     console.error('参数错误')
   }
   return request({
-    url: '/customer/remove',
+    url: BASE_URL + '/customer/remove',
     method: 'delete',
     params: { id }
   })
@@ -56,7 +58,7 @@ export function detail (id) {
     console.error('参数错误')
   }
   return request({
-    url: '/customer/detail/' + id,
+    url: BASE_URL + '/customer/detail/' + id,
     method: 'get'
   })
 }
@@ -67,7 +69,7 @@ export function detail (id) {
  */
 export function list (queryParam = {}) {
   return request({
-    url: '/customer/list',
+    url: BASE_URL + '/customer/list',
     method: 'get',
     params: queryParam
   })
@@ -83,7 +85,7 @@ export function list (queryParam = {}) {
  */
 export function page (page, queryParam = {}) {
   return request({
-    url: '/customer/page',
+    url: BASE_URL + '/customer/page',
     method: 'get',
     params: { ...page, ...queryParam }
   })
