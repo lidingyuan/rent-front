@@ -125,7 +125,7 @@
           <el-button
             type="primary"
             size="mini"
-            @click="temp = {...scope.row};orderDetailVisible = true;readonly = true"
+            @click="temp = {...scope.row};orderDetailV2Visible = true;readonly = true"
           >
             详细信息
           </el-button>
@@ -197,8 +197,11 @@
           prop="detail"
           :rules="[{required:true, message:'必须字段'}]"
         >
-          <el-button @click="orderDetailVisible = true;readonly = false">
+          <el-button @click="orderDetailV2Visible = true;readonly = false">
             详细信息
+          </el-button>
+          <el-button @click="orderDetailVisible = true;readonly = false">
+            详细信息（全展示）
           </el-button>
         </el-form-item>
       </el-form>
@@ -223,7 +226,14 @@
       :data.sync="temp.detail"
       :readonly="readonly"
     />
+    <OrderDetailV2
+      :visible.sync="orderDetailV2Visible"
+      :order-id="temp.id"
+      :data.sync="temp.detail"
+      :readonly="readonly"
+    />
     <OrderPrint
+      v-if="printVisible"
       ref="print"
       :data="temp"
       :find-project-name="findProjectName"
@@ -235,16 +245,19 @@
 import * as OrderApi from '@/api/OrderApi.js'
 import { mapGetters } from 'vuex'
 import OrderDetail from '../components/OrderDetail.vue'
+import OrderDetailV2 from '../components/OrderDetailV2.vue'
 import OrderPrint from '../components/OrderPrint.vue'
 import * as DateUtil from '@/core/utils/DateUtil'
 
 export default {
   name: 'Output',
-  components: { OrderDetail, OrderPrint },
+  components: { OrderDetail, OrderDetailV2, OrderPrint },
   data () {
     return {
       readonly: false,
       orderDetailVisible: false,
+      orderDetailV2Visible: false,
+      printVisible: false,
       // ---查询条件
       page: {
         current: 1,
@@ -316,10 +329,12 @@ export default {
       })
     },
     print (row) {
+      this.printVisible = true
       this.checkDetail(row).then(() => {
         this.temp = { ...row }
         this.$nextTick(() => {
           this.$refs.print.print()
+          this.printVisible = false
         })
       })
     },
@@ -337,6 +352,9 @@ export default {
       OrderApi.page(options).then(res => {
         this.$objects.copyProperties(res.data, this.page)
         this.dataList = res.data.records
+        this.page.current = res.data.current
+        this.page.total = res.data.total
+        this.page.size = res.data.size
       })
     },
     // ---新增
@@ -442,7 +460,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消'
       }).then(() => {
-        OrderApi.withdraw({ id: row.id }).then(res => {
+        OrderApi.withdraw({ id: row.id, type: this.queryParam.type }).then(res => {
           this.$message({
             message: '出库单状态已改变',
             type: 'success',

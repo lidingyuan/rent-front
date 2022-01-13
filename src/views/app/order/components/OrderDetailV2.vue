@@ -1,5 +1,6 @@
 <template>
   <el-dialog
+    width="800px"
     :visible.sync="orderDetailVisible"
     @update:visible="val=>this.$emit('update:visible', val)"
   >
@@ -14,6 +15,7 @@
         <el-table-column
           prop="name"
           label="名称"
+          width="120"
         >
           <template #default="{row}">
             <el-select
@@ -48,13 +50,19 @@
             <el-input-number
               v-model="row.num"
               :controls="false"
+              :disabled="readonly"
             />
           </template>
         </el-table-column>
         <el-table-column
           prop="unit"
           label="单位"
-        />
+          width="50"
+        >
+          <template #default="{row}">
+            {{ row.materialCode | filterUnit }}
+          </template>
+        </el-table-column>
       </el-table>
       <el-table
         size="mini"
@@ -66,6 +74,7 @@
         <el-table-column
           prop="name"
           label="名称"
+          width="120"
         />
         <el-table-column
           prop="num"
@@ -74,11 +83,13 @@
         <el-table-column
           prop="unit"
           label="单位"
+          width="50"
         />
       </el-table>
     </div>
 
     <el-button
+      v-if="!readonly"
       @click="save"
     >
       保存
@@ -91,7 +102,13 @@ import * as OrderApi from '@/api/OrderApi.js'
 import baseData from '@/core/service/baseDataService'
 export default {
   name: 'OrderDetail',
+  filters: {
+    filterUnit (code) {
+      return baseData.materialList.find(item => item.code === code)?.unit
+    }
+  },
   props: {
+    readonly: Boolean,
     visible: Boolean,
     data: Array,
     orderId: [Number, String]
@@ -100,7 +117,6 @@ export default {
     return {
       orderDetailVisible: false,
       materialList: [],
-      form: {},
       dataList: [{ materialCode: null, num: null }],
       dataMap: {},
       typeMap: {}
@@ -121,14 +137,17 @@ export default {
             num: 0
           }
         }
-        typeMap[m.typeId].num += item.num * m.factor
+        typeMap[m.typeId].num = Math.round((typeMap[m.typeId].num + item.num * m.factor) * 100) / 100
       })
       return Object.values(typeMap)
     }
   },
   watch: {
-    visible () {
-      this.orderDetailVisible = this.visible
+    visible: {
+      handler () {
+        this.orderDetailVisible = this.visible
+      },
+      immediate: true
     },
     dataList () {
       this.materialList = baseData.materialList
@@ -136,11 +155,21 @@ export default {
     orderDetailVisible (val) {
       this.$emit('update:visible', val)
     },
+    data () {
+      if (this.data?.length) {
+        this.dataList = [...this.data, { materialCode: null, num: null }]
+      }
+    },
     orderId () {
       if (this.orderId) {
         OrderApi.detailList({ orderId: this.orderId }).then(res => {
           this.dataList = res.data
+          if (!this.readonly) {
+            this.dataList.push({ materialCode: null, num: null })
+          }
         })
+      } else {
+        this.dataList = [{ materialCode: null, num: null }]
       }
     }
   },
@@ -151,7 +180,6 @@ export default {
     })
     this.typeMap = typeMap
     this.materialList = baseData.materialList
-    this.orderDetailVisible = this.visible
   },
   methods: {
     save () {

@@ -153,6 +153,7 @@ export default {
         size: 50
       },
       queryParam: {
+        state: 1
       },
       dataList: [],
       // ---编辑弹窗
@@ -202,6 +203,9 @@ export default {
       CustomerApi.page(options).then(res => {
         this.$objects.copyProperties(res.data, this.page)
         this.dataList = res.data.records
+        this.page.current = res.data.current
+        this.page.total = res.data.total
+        this.page.size = res.data.size
       })
     },
     // ---新增
